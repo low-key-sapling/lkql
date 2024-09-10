@@ -1,10 +1,11 @@
+const redis = require('redis');
 // 获取今天的日期 (以 YYYY-MM-DD 格式)
 function getTodayDate() {
   const today = new Date();
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0'); // 补0
   const day = String(today.getDate()).padStart(2, '0');
-  return `${year} -${month} -${day}`;
+  return `${year}-${month}-${day}`;
 }
 
 // 连接 Redis 并返回客户端实例
@@ -13,7 +14,7 @@ async function connectRedis() {
     url: 'redis://:foobared@192.168.100.3:6379'
   });
 
-  client.on('error', (err) = > console.log('Redis Client Error', err));
+  client.on('error', (err) => console.log('Redis Client Error', err));
 
   await client.connect(); // 等待连接
   console.log('已连接到 Redis 服务器');
@@ -35,7 +36,6 @@ async function getRedisValue(client, key) {
 
 // 判断是否第二次提交
 async function isSecondCommit() {
-  const redis = require('redis');
   const today = getTodayDate();
   const client = await connectRedis(); // 获取 Redis 客户端实例
   let isSecondFlag = false;
@@ -46,12 +46,14 @@ async function isSecondCommit() {
   console.log('获取到today的值:', today)
   if (xijiu_sign === today) {
     // 第三次点击，提示已经点击过
-    if(xijiu_sign_count > 2){
-      console.log('今天已经点击过两次了！');   
+    if(xijiu_sign_count >= 2){
+      xijiu_sign_count++
+      await setRedisValue(client, 'xijiu_sign_count', xijiu_sign_count);
+      isSecondFlag = true;
+      console.log('今天已经运行次数：',xijiu_sign_count); 
     }else{
         //第二次点击
         await setRedisValue(client, 'xijiu_sign_count', '2');
-        isSecondFlag = true;
         console.log('这是今天的第二次点击！');
     }
   } else {
@@ -67,7 +69,8 @@ async function isSecondCommit() {
 
 // 主函数
 async function main() {
-    if(isSecondCommit()){
+  let isSecondFlag = await isSecondCommit();
+    if(isSecondFlag){
         console.log('今天已经点击过了！');   
     }
 }
