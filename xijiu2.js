@@ -114,7 +114,7 @@ async function main() {
         } catch (error) {
           console.log("错误:", error.message);
         }
-        if(!isSecondFlag()){
+        if(!isSecondFlag){
             let sign = await commonPost("/member/Signin/sign",'from=miniprogram_index');
             console.log(sign.msg)
         }
@@ -142,11 +142,20 @@ async function main() {
         //每日签到
         console.log("————————————")
         console.log("开始每日签到")
-        let dailySign = await commonPost("/garden/sign/dailySign",JSON.stringify({}));
-        if (dailySign.data.isTodayFirstSign) {
-            console.log(dailySign.data.tips)
-        } else {
-            console.log('今日已签到')
+        let isSecondFlag2 = false;
+        try {
+          isSecondFlag2 = await isSecondCommit(id+'2');
+          console.log(result);
+        } catch (error) {
+          console.log("错误:", error.message);
+        }
+        if(!isSecondFlag2){
+          let dailySign = await commonPost("/garden/sign/dailySign",JSON.stringify({}));
+          if (dailySign.data.isTodayFirstSign) {
+              console.log(dailySign.data.tips)
+          } else {
+              console.log('今日已签到')
+          }
         }
         //种植
         console.log("————————————")
