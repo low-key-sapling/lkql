@@ -4,6 +4,76 @@
  * export XiJiu_Exchange='true'//酒换积分
  * export OCR_SERVER="ocr服务"
  */
+
+const redis = require('redis');
+// 获取今天的日期 (以 YYYY-MM-DD 格式)
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // 补0
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// 连接 Redis 并返回客户端实例
+async function connectRedis() {
+  const client = redis.createClient({
+    url: 'redis://:foobared@192.168.100.3:6379'
+  });
+
+  client.on('error', (err) => console.log('Redis Client Error', err));
+
+  await client.connect(); // 等待连接
+  console.log('已连接到 Redis 服务器');
+  return client; // 返回连接好的 Redis 客户端
+}
+
+// 设置 Redis 的键值
+async function setRedisValue(client, key, value) {
+  await client.set(key, value);
+  console.log(`已设置 ${key} 为 ${value}`);
+}
+
+// 获取 Redis 的值
+async function getRedisValue(client, key) {
+  const value = await client.get(key);
+  console.log(`获取到的值为:${value}`);
+  return value;
+}
+
+// 判断是否第二次提交
+async function isSecondCommit(cookie) {
+  const today = getTodayDate();
+  const client = await connectRedis(); // 获取 Redis 客户端实例
+  let isSecondFlag = false;
+  let xijiu_sign = await getRedisValue(client, cookie+'xijiu_sign'); // 获取键值对
+  let xijiu_sign_count = await getRedisValue(client, cookie+'xijiu_sign_count'); // 获取键值对
+  console.log('获取到xijiu_sign的值:', xijiu_sign)
+  console.log('获取到xijiu_sign_count的值:', xijiu_sign_count)
+  console.log('获取到today的值:', today)
+  if (xijiu_sign === today) {
+    // 第三次点击，提示已经点击过
+    if(xijiu_sign_count >= 2){
+      xijiu_sign_count++
+      await setRedisValue(client, cookie+'xijiu_sign_count', xijiu_sign_count);
+      isSecondFlag = true;
+      console.log('今天已经运行次数：',xijiu_sign_count); 
+    }else{
+        //第二次点击
+        await setRedisValue(client, cookie+'xijiu_sign_count', '2');
+        console.log('这是今天的第二次点击！');
+    }
+  } else {
+    // 设置键值对 // 保存今天的日期// 第一次点击，记录状态
+    await setRedisValue(client, cookie+'xijiu_sign', today);
+    await setRedisValue(client, cookie+'xijiu_sign_count', '1');
+    console.log('这是今天的第一次点击！');
+  }
+
+  await client.disconnect(); // 完成操作后断开连接
+  return isSecondFlag;
+}
+
 const $ = new Env('习酒');
 const notify = $.isNode() ? require('../sendNotify') : '';
 const XiJiu = ($.isNode() ? JSON.parse(process.env.XiJiu) : $.getjson("XiJiu")) || [];
@@ -37,8 +107,18 @@ async function main() {
         console.log(token)
         //签到
         console.log("开始签到")
-        let sign = await commonPost("/member/Signin/sign",'from=miniprogram_index');
-        console.log(sign.msg)
+        let isSecondFlag = false;
+        try {
+          isSecondFlag = await isSecondCommit(id);
+          console.log(result);
+        } catch (error) {
+          console.log("错误:", error.message);
+        }
+        if(!isSecondFlag()){
+            let sign = await commonPost("/member/Signin/sign",'from=miniprogram_index');
+            console.log(sign.msg)
+        }
+
         //农场
         //每日验证
         console.log("————————————")
