@@ -103,7 +103,8 @@ async function signIn() {
 
     let config = {
         method: 'POST',
-        url: 'https://scrm.gujing.com/gujing_scrm/wxclient/mkt/activities/sign:search',
+        //url: 'https://scrm.gujing.com/gujing_scrm/wxclient/mkt/activities/sign:search',
+        url: 'https://scrm.gujing.com/gujing_scrm/wxclient/mkt/activities/sign:join',
         headers: {
             'User-Agent': 'Mozilla/5.0 (Linux; Android 10; MI 8 Lite Build/QKQ1.190910.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/122.0.6261.120 Mobile Safari/537.36 XWEB/1220089 MMWEBSDK/20240404 MMWEBID/8150 MicroMessenger/8.0.49.2600(0x28003156) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64 miniProgram/wxba9855bdb1a45c8e',
             'Accept': 'application/json, text/plain, */*',
