@@ -1,3 +1,10 @@
+# !/usr/bin/python3
+# -- coding: utf-8 --
+"""
+青龙面板环境变量API脚本
+"""
+
+
 import requests
 from json import dumps as jsonDumps
  
@@ -142,7 +149,7 @@ if __name__ == "__main__":
 
     result = ql.addEnvs(envs);
     result = ql.get_by_name("test");
-    print(result[0].get('id'))
+    print(result[0])
     #print(result)
     delEnvs = [result[0].get('id')]
     #result = ql.deleteEnvs(delEnvs)
