@@ -8,6 +8,7 @@
 #   变量名:yuanshen_gjhy
 #   多号分割方式 [ @ 或 换行 或 新建同名变量 ]
 #   corn: 一天一次即可
+#   Follow By: https://github.com/huaji8/huajiScript
 #   --------------------------------祈求区--------------------------------
 #                     _ooOoo_
 #                    o8888888o
