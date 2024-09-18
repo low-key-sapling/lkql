@@ -1,11 +1,11 @@
 /**
  * 海尔智家
  * cron 8 1 * * *  hezj.js
-
-TL库:https://github.com/3288588344/toulu.git
-tg频道:https://t.me/TLtoulu
-QQ频道:https://pd.qq.com/s/672fku8ge
-* ========= 青龙--配置文件 ===========
+ * Follow By：https://github.com/3288588344/toulu
+ * TL库:https://github.com/3288588344/toulu.git
+ * tg频道:https://t.me/TLtoulu
+ * QQ频道:https://pd.qq.com/s/672fku8ge
+ * ========= 青龙--配置文件 ===========
  * # 项目名称
  * export hezj_data='token&clientId @ token&clientId '
  * 
