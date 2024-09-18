@@ -135,12 +135,8 @@ class qlconfig():
 
 if __name__ == "__main__":
  
+    self.log(f"测试青龙配置文件API开始")
     ql_config = qlconfig()
-    result = ql_config.value('config.sh')
-    #result = '## 设置变量\rexport="aaa\rbbb"\r\r'+result
-    variable_name = "ccc"
-    new_value = '''"new_0
-new_1
-new_2"'''
-    result = ql_config.update_config_by_name(variable_name,new_value)
-    print(result)
+    result = ql_config.list();
+    self.log(f"{result[0]}")
+    self.log(f"测试青龙配置文件API完成")
