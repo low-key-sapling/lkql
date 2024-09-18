@@ -139,17 +139,9 @@ class QL:
  
  
 if __name__ == "__main__":
- 
-    ql = QL()
- 
-    #envs = ql.getEnvs()
-    #print(envs)
-    
-    envs = [{"name":"test","value":"test\rtest2"}]
 
-    result = ql.addEnvs(envs);
-    result = ql.get_by_name("test");
-    print(result[0])
-    #print(result)
-    delEnvs = [result[0].get('id')]
-    #result = ql.deleteEnvs(delEnvs)
+    self.log(f"测试青龙环境变量API开始")
+    ql = QL()
+    result = ql.get_by_name("JD_COOLIE");
+    self.log(f"{result[0]}")
+    self.log(f"测试青龙环境变量API完成")
