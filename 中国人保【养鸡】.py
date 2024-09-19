@@ -40,7 +40,7 @@ class RUN():
             'userId': self.user_id,
         }
         try:
-            response = requests.get('https://m.picclife.cn/chicken-api/h5login', params=params, headers=self.mHeaders)
+            response = requests.post('https://m.picclife.cn/chicken-api/h5login', params=params, headers=self.mHeaders)
             if not response or response.status_code != 200:
                 print('鸡场登录异常')
                 save_result_to_file("error", self.name)
