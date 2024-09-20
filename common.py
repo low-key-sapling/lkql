@@ -326,4 +326,4 @@ def get_today_date():
     """
     返回今天的日期，格式为YYYY-MM-DD
     """
-    return datetime.date.today().strftime('%Y-%m-%d')
+    return datetime.now().strftime('%Y-%m-%d')
