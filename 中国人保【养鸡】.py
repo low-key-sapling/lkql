@@ -348,6 +348,10 @@ class RUN():
             self.chicken_daily_task()
             time.sleep(random.randint(5, 10))
 
+            # 做完任务统一领一遍饲料
+            self.chicken_collect_tall()
+            time.sleep(random.randint(5, 10))
+            
             # 喂鸡
             eggPer, foodCount, chickfoodStatus = self.get_egg_growth()
             if eggPer is not None and foodCount is not None and chickfoodStatus is not None:
