@@ -119,10 +119,10 @@ class QL:
                 self.log(f"新建环境变量成功：{len(envs)}")
                 return True
             else:
-                self.log(f"新建环境变量失败：{rjson['message']}")
+                self.log(f"新建环境变量失败：{rjson}")
                 return False
         except Exception as e:
-            self.log(f"新建环境变量失败：{str(e)}")
+            self.log(f"新建环境变量失败：{rjson}{str(e)}")
             return False
  
     def updateEnv(self, env: dict) -> bool:
@@ -145,10 +145,10 @@ class QL:
                 self.log(f"更新环境变量成功")
                 return True
             else:
-                self.log(f"更新环境变量失败：{rjson['message']}")
+                self.log(f"更新环境变量失败：{rjson}")
                 return False
         except Exception as e:
-            self.log(f"更新环境变量失败：{str(e)}")
+            self.log(f"更新环境变量失败：{rjson}{str(e)}")
             return False
 
     def isFisrtSignIn(self, env_name):
@@ -157,26 +157,32 @@ class QL:
         :env_name: 变量名称
         """
         currentDate = get_today_date()
-        env_value = os.getenv(env_name)
-        if not env_value:
+        result = self.get_by_name(env_name)
+        
+        if not result:
           print(f'✅未获取到{env_name}变量：首次进入,可以去签到或者做第一次啦,现在设置变量 {env_name} ')
-          new_envs = [{
-            'name':{env_name},
-            'value':currentDate,
-            'remarks':'缓存是否首次进入'
-          }]
+          new_envs = [
+                        {
+                            "name": env_name,
+                            "value": currentDate,
+                            "remarks": "缓存是否首次进入"
+                        }
+                    ]
           self.addEnvs(new_envs)
           return True
+        env_value = result[0].get("value")
+        env_id = result[0].get("id")
         if env_value == currentDate:
           print(f'⛔️{env_name}变量值与当前日期{currentDate}相等：非首次进入 ')
           return False
         else:
-          print(f'✅{env_name}变量值与当前日期{currentDate}不相等：首次进入,更新变量值 ')
+          print(f'✅{env_name}变量值与当前日期{currentDate}不相等：今日首次进入,更新变量值 ')
           update_envs = {
-            'name':{env_name},
-            'value':currentDate
-          }
-          self.addEnvs(update_envs)
+                            "id": env_id,
+                            "name": env_name,
+                            "value": currentDate
+                        }
+          self.updateEnv(update_envs)
           return True
  
 if __name__ == "__main__":
@@ -190,4 +196,3 @@ if __name__ == "__main__":
     isFisrtSignIn = ql.isFisrtSignIn('test_sign');
     print(f"isFisrtSignIn变量值：{isFisrtSignIn}")
     print(f"测试青龙环境变量是否首次进入API结束")
-    
