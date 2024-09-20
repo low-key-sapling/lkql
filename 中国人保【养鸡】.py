@@ -17,7 +17,7 @@ from common import save_result_to_file
 from sendNotify import send
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
-
+from qlenvs import QL
 
 class RUN():
     name = "中国人保-养鸡"
@@ -324,10 +324,21 @@ class RUN():
             # 抽奖
             self.lottery()
             time.sleep(random.randint(5, 10))
-
+            
+            isFisrtSignIn = False;
+            try:
+                ql = QL()
+                #是否首次签到
+                isFisrtSignIn = ql.isFisrtSignIn('ZGRenBao_sign');
+            except Exception:
+                print(f'⛔️判断首次签到异常了呀')
+            
             # 签到
-            self.daily_sign()
-            time.sleep(random.randint(5, 10))
+            if(isFisrtSignIn):
+                self.daily_sign()
+                time.sleep(random.randint(5, 10))
+            else:
+                print(f'⛔️今天已经签到过啦,明天再来呀')
 
             # 先把饲料领一遍
             self.chicken_collect_tall()
