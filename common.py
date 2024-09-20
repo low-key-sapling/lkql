@@ -321,3 +321,9 @@ def generate_nanosecond_timestamp():
     nanoseconds = int(current_time_seconds * 1e9)
 
     return nanoseconds
+
+def get_today_date():
+    """
+    返回今天的日期，格式为YYYY-MM-DD
+    """
+    return datetime.date.today().strftime('%Y-%m-%d')
