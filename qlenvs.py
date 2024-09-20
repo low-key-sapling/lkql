@@ -167,7 +167,7 @@ class QL:
           }]
           self.addEnvs(new_envs)
           return True
-        if env_value == currentDate：
+        if env_value == currentDate:
           print(f'⛔️{env_name}变量值与当前日期{currentDate}相等：非首次进入 ')
           return False
         else:
