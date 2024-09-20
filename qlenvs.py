@@ -4,9 +4,10 @@
 青龙面板环境变量API脚本
 """
 
-
+import os
 import requests
 from json import dumps as jsonDumps
+from common import get_today_date
  
 class QL:
     #def __init__(self, address: str, id: str, secret: str) -> None:
@@ -104,6 +105,11 @@ class QL:
     def addEnvs(self, envs: list) -> bool:
         """
         新建环境变量
+        list:[{
+          'name':'',
+          'value':'',
+          'remarks':''
+        }]
         """
         url = f"{self.address}/open/envs"
         headers = {"Authorization": self.auth,"content-type": "application/json"}
@@ -122,6 +128,14 @@ class QL:
     def updateEnv(self, env: dict) -> bool:
         """
         更新环境变量
+        dict：{
+        '':'',
+        '':''
+        }
+        :param value: 新值
+        :param name: 新名称
+        :param id: 环境变量id
+        :param remarks: 新备注
         """
         url = f"{self.address}/open/envs"
         headers = {"Authorization": self.auth,"content-type": "application/json"}
@@ -136,7 +150,34 @@ class QL:
         except Exception as e:
             self.log(f"更新环境变量失败：{str(e)}")
             return False
- 
+
+    def isFisrtSignIn(self, env_name):
+        """
+        判断传入变量是否当天第一次使用，用于判断二次点击或者二次登录
+        :env_name: 变量名称
+        """
+        currentDate = get_today_date()
+        env_value = os.getenv(env_name)
+        if not env_value:
+          print(f'✅未获取到{env_name}变量：首次进入,可以去签到或者做第一次啦,现在设置变量 {env_name} ')
+          new_envs = [{
+            'name':{env_name},
+            'value':currentDate,
+            'remarks':'缓存是否首次进入'
+          }]
+          self.addEnvs(new_envs)
+          return True
+        if env_value == currentDate：
+          print(f'⛔️{env_name}变量值与当前日期{currentDate}相等：非首次进入 ')
+          return False
+        else:
+          print(f'✅{env_name}变量值与当前日期{currentDate}不相等：首次进入,更新变量值 ')
+          update_envs = {
+            'name':{env_name},
+            'value':currentDate
+          }
+          self.addEnvs(update_envs)
+          return True
  
 if __name__ == "__main__":
 
@@ -145,3 +186,8 @@ if __name__ == "__main__":
     result = ql.get_by_name("JD_COOLIE");
     self.log(f"{result[0]}")
     self.log(f"测试青龙环境变量API完成")
+    self.log(f"测试青龙环境变量是否首次进入API开始")
+    isFisrtSignIn = ql.isFisrtSignIn('test_sign');
+    self.log(f"isFisrtSignIn变量值：{isFisrtSignIn}")
+    self.log(f"测试青龙环境变量是否首次进入API结束")
+    
