@@ -325,7 +325,7 @@ class RUN():
             self.lottery()
             time.sleep(random.randint(5, 10))
             
-            isFisrtSignIn = False;
+            isFisrtSignIn = True;
             try:
                 ql = QL()
                 #是否首次签到
