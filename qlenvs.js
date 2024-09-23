@@ -4,6 +4,8 @@
  */
 
 const $ = new Env('环境变量API');
+
+let address = "http://www.lksapling.top:8005"
 let qlAuth = "";
 
 !(async () => {
@@ -19,52 +21,172 @@ let qlAuth = "";
 console.log('测试青龙环境变量API开始');
 
 async function main() {
+    //登录青龙
     await initQL();
-    console.log(`ql auth = ${qlAuth}`)
+
+    //获取全部环境变量
+    //await getEnvs();
+
+    //根据名称获取环境变量
+    //await getEnvByName("JD_COOKIE")
+
+    //根据ID获取环境变量
+    //await getEnvById(1)
+
+    //新建环境变量
+    // let list = [{
+    //     'name': 'testqltest',
+    //     'value': 'tql',
+    //     'remarks': 'ss'
+    // }]
+    // await addEnvs(JSON.stringify(list));
+
+    //更新环境变量
+    // let env = await getEnvByName("testqltest");
+    // env = env[0]
+    // env = {"id":env.id,"value":"sdfdfsd111","name":env.name,"remarks":env.remarks}
+    // await updateEnv(JSON.stringify(env));
+
+    //删除环境变量
+    // let env = await getEnvByName("testqltest");
+    // env = env[0]
+    // let delEnvs = [env.id]
+    // await deleteEnv(JSON.stringify(delEnvs));
+
 }
 
+//登录青龙
 async function initQL() {
-    let address = "http://www.lksapling.top:8005"
     let id = "S-aL4AvQ_tQ-"
     let secret = "9YYMRxvxZ7t9yi-8JzFsfnQc"
     let url = `${address}/open/auth/token?client_id=${id}&client_secret=${secret}`
-    $.get(url, async (err, resp, data) => {
-        try {
-            if (err) {
-                console.log(`${$.name} API请求失败，请检查网路重试:${JSON.stringify(err)}`)
-            } else {
-                await $.wait(4000);
-                let result = JSON.parse(data);
-                console.log(`result=${result}`)
-                if (result.code === 200) {
-                    qlAuth = result.data.token;
-                } else {
-                    console.log(`登录失败：result=${result}`)
-                }
-            }
-        } catch (e) {
-            $.logErr(e, resp)
-        } finally {
-            resolve();
-        }
-    })
+    let result = await commonGet(url);
+    if (result.code === 200) {
+        console.log(`登录成功`)
+        qlAuth = `${result.data.token_type} ${result.data.token}`;
+    } else {
+        console.log(`登录失败:result=${JSON.stringify(result)}`)
+    }
 }
 
-async function commonPost(url, body = '') {
+//获取全部环境变量
+async function getEnvs() {
+
+    let url = `${address}/open/envs?searchValue=`
+    let result = await commonGet(url);
+    if (result.code === 200) {
+        console.log(`获取环境变量成功：result=${JSON.stringify(result)}`)
+        return result.data;
+    } else {
+        console.log(`获取环境变量失败:result=${JSON.stringify(result)}`)
+        return [];
+    }
+}
+
+//根据名称获取环境变量
+async function getEnvByName(envName) {
+
+    let url = `${address}/open/envs?searchValue=${envName}`
+    let result = await commonGet(url);
+    if (result.code === 200) {
+        console.log(`获取环境变量${envName}成功：result=${JSON.stringify(result.data)}`)
+        return result.data;
+    } else {
+        console.log(`获取环境变量${envName}失败:result=${JSON.stringify(result)}`)
+        return null;
+    }
+}
+
+//根据ID获取环境变量
+async function getEnvById(id) {
+
+    let url = `${address}/open/envs/${id}`
+    let result = await commonGet(url);
+    if (result.code === 200) {
+        console.log(`获取环境变量${id}成功：result=${JSON.stringify(result.data)}`)
+        return result.data;
+    } else {
+        console.log(`获取环境变量${id}失败:result=${JSON.stringify(result)}`)
+        return null;
+    }
+}
+
+/**
+ * 新建环境变量
+ * @param envs
+ *         list:[{
+ *           'name':'',
+ *           'value':'',
+ *           'remarks':''
+ *         }]
+ * @returns {Promise<void>}
+ */
+async function addEnvs(envs) {
+
+    let url = `${address}/open/envs`
+    let result = await commonPost(url,envs);
+    if (result.code === 200) {
+        console.log(`新建环境变量成功：result=${JSON.stringify(result.data)}`)
+    } else {
+        console.log(`新建环境变量失败:result=${JSON.stringify(result)}`)
+    }
+}
+
+/**
+ * 更新环境变量
+ * @param env
+ *         env:{
+ *           'id':'',
+ *           'name':'',
+ *           'value':'',
+ *           'remarks':''
+ *         }
+ * @returns {Promise<void>}
+ */
+async function updateEnv(env) {
+
+    let url = `${address}/open/envs`
+    let result = await commonPut(url,env);
+    if (result.code === 200) {
+        console.log(`更新环境变量成功：result=${JSON.stringify(result.data)}`)
+    } else {
+        console.log(`更新环境变量失败:result=${JSON.stringify(result)}`)
+    }
+}
+
+/**
+ * 删除环境变量
+ * @param envs
+ *         envs:[
+ *           id1,
+ *           id2
+ *         ]
+ * @returns {Promise<void>}
+ */
+async function deleteEnv(envs) {
+    let url = `${address}/open/envs`
+    let result = await commonDelete(url,envs);
+    if (result.code === 200) {
+        console.log(`删除环境变量成功：result=${JSON.stringify(result.data)}`)
+    } else {
+        console.log(`删除环境变量失败:result=${JSON.stringify(result)}`)
+    }
+}
+
+async function commonDelete(url, body = '') {
     return new Promise(resolve => {
         const options = {
-            url: `https://apimallwm.exijiu.com${url}`,
+            url: `${url}`,
+            method: `delete`,
             headers: {
                 'Connection': 'keep-alive',
-                'Authorization': token,
+                'Authorization': qlAuth,
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) XWEB/9129',
                 'Content-Type': 'application/json',
                 'Accept': '*/*',
-                'Origin': 'https://mallwm.exijiu.com',
                 'Sec-Fetch-Site': 'cross-site',
                 'Sec-Fetch-Mode': 'cors',
                 'Sec-Fetch-Dest': 'empty',
-                'Referer': 'https://servicewechat.com/wx673f827a4c2c94fa/264/page-frame.html',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'zh-CN,zh;q=0.9'
             },
@@ -76,7 +198,80 @@ async function commonPost(url, body = '') {
                     console.log(`${JSON.stringify(err)}`)
                     console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
-                    await $.wait(4000);
+                    await $.wait(100);
+                    resolve(JSON.parse(data));
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+async function commonPut(url, body = '') {
+    return new Promise(resolve => {
+        const options = {
+            url: `${url}`,
+            method: `put`,
+            headers: {
+                'Connection': 'keep-alive',
+                'Authorization': qlAuth,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) XWEB/9129',
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Sec-Fetch-Site': 'cross-site',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Dest': 'empty',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Language': 'zh-CN,zh;q=0.9'
+            },
+            body: body,
+        }
+        $.post(options, async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    await $.wait(100);
+                    resolve(JSON.parse(data));
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+
+async function commonPost(url, body = '') {
+    return new Promise(resolve => {
+        const options = {
+            url: `${url}`,
+            headers: {
+                'Connection': 'keep-alive',
+                'Authorization': qlAuth,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) XWEB/9129',
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Sec-Fetch-Site': 'cross-site',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Dest': 'empty',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Language': 'zh-CN,zh;q=0.9'
+            },
+            body: body,
+        }
+        $.post(options, async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    await $.wait(100);
                     resolve(JSON.parse(data));
                 }
             } catch (e) {
@@ -129,18 +324,16 @@ async function makePost(url, body = '') {
 async function commonGet(url) {
     return new Promise(resolve => {
         const options = {
-            url: `https://apimallwm.exijiu.com${url}`,
+            url: `${url}`,
             headers: {
                 'Connection': 'keep-alive',
-                'Authorization': token,
+                'Authorization': qlAuth,
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) XWEB/9129',
                 'Content-Type': 'application/json',
                 'Accept': '*/*',
-                'Origin': 'https://mallwm.exijiu.com',
                 'Sec-Fetch-Site': 'cross-site',
                 'Sec-Fetch-Mode': 'cors',
                 'Sec-Fetch-Dest': 'empty',
-                'Referer': 'https://servicewechat.com/wx673f827a4c2c94fa/264/page-frame.html',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'zh-CN,zh;q=0.9'
             }
@@ -151,7 +344,6 @@ async function commonGet(url) {
                     console.log(`${JSON.stringify(err)}`)
                     console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
-                    await $.wait(4000);
                     resolve(JSON.parse(data));
                 }
             } catch (e) {
