@@ -1,3 +1,15 @@
+//随机延时start到end秒,end必须大于start
+function randomSleep(start, end) {
+    // 生成10到30秒之间的随机延时
+    const delay = Math.random() * (end - start) + 10;
+
+    console.log(`Sleeping for ${delay} seconds...`);
+
+    setTimeout(() => {
+        console.log('Done sleeping!');
+    }, delay * 1000); // 将延时转换为毫秒
+}
+
 //判断一个变量是否为空
 function isNotEmpty(variable) {
     if (variable !== undefined && variable !== null) {
@@ -501,4 +513,4 @@ function Env(t, e) {
 }
 
 // 将函数导出为模块的一部分
-module.exports = { isNotEmpty, getCurrentDate, Env };
+module.exports = {randomSleep, isNotEmpty, getCurrentDate, Env };
