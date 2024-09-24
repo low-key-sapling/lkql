@@ -3,7 +3,7 @@
  * 青龙面板环境变量API脚本
  */
 
-const {getCurrentDate, Env} = require("./common");
+const {isNotEmpty, getCurrentDate, Env} = require("./common");
 
 const $ = new Env('QL环境变量API');
 
@@ -58,7 +58,7 @@ async function main() {
 
     //判断是否首次进入
     let isFirstSignIn = isFirstSignIn("testNewSign");
-    if (isFirstSignIn) {
+    if (!isNotEmpty(isFirstSignIn)) {
         console.log('今日首次进入')
     } else {
         console.log('今日非首次进入')
