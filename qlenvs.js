@@ -57,8 +57,8 @@ async function main() {
     // await deleteEnv(JSON.stringify(delEnvs));
 
     //判断是否首次进入
-    let isFirstSignIn = isFirstSignIn("testNewSign");
-    if (!isNotEmpty(isFirstSignIn)) {
+    let isFirstSignInTemp = await isFirstSignIn("testNewSign");
+    if (!isNotEmpty(isFirstSignInTemp)) {
         console.log('今日首次进入')
     } else {
         console.log('今日非首次进入')
@@ -191,8 +191,8 @@ async function deleteEnv(envs) {
 async function isFirstSignIn(env_name) {
     let currentDate = getCurrentDate();
     let result = await getEnvByName(env_name);
-    if (!result) {
-        console.log(`✅未获取到${env_name}变量：首次进入,可以去签到或者做第一次啦,现在设置变量${env_name}`)
+    if (!isNotEmpty(result)) {
+        console.log(`✅未获取到${env_name}变量：首次进入,可以去签到或者做第一次啦,现在设置变量${env_name}变量值${currentDate}`)
         let new_envs = [
             {
                 "name": env_name,
