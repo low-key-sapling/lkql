@@ -35,7 +35,7 @@ async function main() {
         console.log(`=====================用户：${id}开始任务=====================`)
         randomSleep(10,30);
         console.log('查询积分')
-        let jiFen = await loginGet(`anti-channeling/public/index.php/api/v2/Member/getJifenShopMemberInfo`);
+        let jiFen = await loginGet(`/anti-channeling/public/index.php/api/v2/Member/getJifenShopMemberInfo`);
         if (jiFen.code === 0) {
             console.log(`id:${jiFen.data.id}\nintegration:${jiFen.data.integration}\nlevel_name:${jiFen.data['level_name']}`)
         } else if (jiFen.code === -1) {
