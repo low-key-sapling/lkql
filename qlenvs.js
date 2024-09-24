@@ -3,7 +3,7 @@
  * 青龙面板环境变量API脚本
  */
 
-const {isNotEmpty, getCurrentDate, Env} = require("./common");
+const {isNotEmpty, getCurrentDate, Env} = require("./common.js");
 
 const $ = new Env('QL环境变量API');
 
