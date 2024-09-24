@@ -10,14 +10,14 @@ const $ = new Env('QL环境变量API');
 let address = "http://www.lksapling.top:8005"
 let qlAuth = "";
 
-!(async () => {
-    //主程序入口
-    await main();
-})().catch((e) => {
-    $.log(e)
-}).finally(() => {
-    $.done({});
-});
+// !(async () => {
+//     //主程序入口
+//     await main();
+// })().catch((e) => {
+//     $.log(e)
+// }).finally(() => {
+//     $.done({});
+// });
 
 
 //主函数
@@ -427,3 +427,9 @@ async function slidePost(body) {
         })
     })
 }
+
+// 导出变量和函数
+module.exports = {
+    initQL,
+    isFirstSignIn
+};
