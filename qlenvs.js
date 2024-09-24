@@ -189,6 +189,7 @@ async function deleteEnv(envs) {
  * @returns {Promise<void>}
  */
 async function isFirstSignIn(env_name) {
+    await initQL();
     let currentDate = getCurrentDate();
     let result = await getEnvByName(env_name);
     if (!isNotEmpty(result)) {
