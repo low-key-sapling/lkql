@@ -58,7 +58,7 @@ async function main() {
 
     //判断是否首次进入
     let isFirstSignInTemp = await isFirstSignIn("testNewSign");
-    if (!isNotEmpty(isFirstSignInTemp)) {
+    if (isFirstSignInTemp) {
         console.log('今日首次进入')
     } else {
         console.log('今日非首次进入')
@@ -86,7 +86,7 @@ async function getEnvs() {
     let url = `${address}/open/envs?searchValue=`
     let result = await commonGet(url);
     if (result.code === 200) {
-        console.log(`获取环境变量成功：result=${JSON.stringify(result)}`)
+        console.log(`获取环境变量成功`)
         return result.data;
     } else {
         console.log(`获取环境变量失败:result=${JSON.stringify(result)}`)
@@ -100,7 +100,7 @@ async function getEnvByName(envName) {
     let url = `${address}/open/envs?searchValue=${envName}`
     let result = await commonGet(url);
     if (result.code === 200) {
-        console.log(`获取环境变量${envName}成功：result=${JSON.stringify(result.data)}`)
+        console.log(`获取环境变量${envName}成功`)
         return result.data;
     } else {
         console.log(`获取环境变量${envName}失败:result=${JSON.stringify(result)}`)
@@ -113,7 +113,7 @@ async function getEnvById(id) {
     let url = `${address}/open/envs/${id}`
     let result = await commonGet(url);
     if (result.code === 200) {
-        console.log(`获取环境变量${id}成功：result=${JSON.stringify(result.data)}`)
+        console.log(`获取环境变量${id}成功`)
         return result.data;
     } else {
         console.log(`获取环境变量${id}失败:result=${JSON.stringify(result)}`)
@@ -158,7 +158,7 @@ async function updateEnv(env) {
     let url = `${address}/open/envs`
     let result = await commonPut(url, env);
     if (result.code === 200) {
-        console.log(`更新环境变量成功：result=${JSON.stringify(result.data)}`)
+        console.log(`更新环境变量${result.data.name}成功`)
     } else {
         console.log(`更新环境变量失败:result=${JSON.stringify(result)}`)
     }
@@ -200,11 +200,11 @@ async function isFirstSignIn(env_name) {
                 "remarks": "缓存是否首次进入"
             }
         ]
-        await addEnvs(new_envs)
+        await addEnvs(JSON.stringify(new_envs))
         return true;
     }
-    let env_value = result[0].get("value")
-    let env_id = result[0].get("id")
+    let env_value = result[0].value
+    let env_id = result[0].id
     if (env_value === currentDate) {
         console.log(`⛔️${env_name}变量值与当前日期${currentDate}相等：非首次进入`)
         return false;
@@ -215,7 +215,7 @@ async function isFirstSignIn(env_name) {
             "name": env_name,
             "value": currentDate
         }
-        await updateEnv(update_envs)
+        await updateEnv(JSON.stringify(update_envs))
         return true
     }
 }
