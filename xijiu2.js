@@ -4,6 +4,10 @@
  * export XiJiu_Exchange='true'//酒换积分
  * export OCR_SERVER="ocr服务"
  */
+// 引入模块
+const { isFirstSignIn } = require('./qlenvs.js');
+const { randomSleep } = require('./common.js');
+
 const $ = new Env('习酒');
 const notify = $.isNode() ? require('../sendNotify') : '';
 const XiJiu = ($.isNode() ? JSON.parse(process.env.XiJiu) : $.getjson("XiJiu")) || [];
@@ -13,6 +17,8 @@ let cropType = [{"1":"高粱"},{"2":"小麦"}];
 let loginCode = '';
 let token = '';
 let notice = '';
+
+//程序主入口
 !(async () => {
     if (typeof $request != "undefined") {
         await getCookie();
@@ -26,51 +32,75 @@ async function main() {
     for (const item of XiJiu) {
         id = item.id;
         loginCode = item.loginCode;
-        console.log(`用户：${id}开始任务`)
+        console.log(`=====================用户：${id}开始任务=====================`)
+        randomSleep(30,10);
+        console.log('查询积分')
+        let jiFen = await loginGet(`anti-channeling/public/index.php/api/v2/Member/getJifenShopMemberInfo`);
+        if (jiFen.code === 0) {
+            console.log(`id:${jiFen.data.id}\nintegration:${jiFen.data.integration}\nlevel_name:${jiFen.data['level_name']}`)
+        } else if (jiFen.code === -1) {
+            console.log(jiFen.msg)
+        }
+
         console.log('获取token')
         let login = await loginGet(`/anti-channeling/public/index.php/api/v2/Member/getJwt`);
         if (login.code != 0) {
-            console.log(login.msg)
+            console.log(`用户token获取失败：${login.msg}`)
+            console.log(`=====================用户：${id}结束任务=====================`)
             continue
         }
         token = login.data.jwt;
-        console.log(token)
+        console.log(`用户token：${token}`)
+
         //签到
         console.log("开始签到")
-        let sign = await commonPost("/member/Signin/sign",'from=miniprogram_index');
-        console.log(sign.msg)
+        //判断是否首次进入
+        let xiJiuSign = true;
+        try {
+            xiJiuSign = await isFirstSignIn(`xiJiuSign${id}`);
+        } catch (e) {
+            xiJiuSign = true
+        }
+        if (xiJiuSign) {
+            let sign = await commonPost("/member/Signin/sign", 'from=miniprogram_index');
+            console.log(sign.msg)
+        } else {
+            console.log('⛔️今天已经签到过啦,明天再来呀')
+        }
+
         //农场
         //每日验证
-        console.log("————————————")
-        console.log("开始每日验证")
+        console.log("开始每日验证:")
         let getValidateInfo = await commonGet(`/garden/slide_validate/getValidateInfo`);
         if (getValidateInfo.data.status == 1) {
             let slidingImage = getValidateInfo.data.datas[1].split(",")[1];
             let backImage = getValidateInfo.data.datas[0].split(",")[1];
             let getXpos = await slidePost({'slidingImage': slidingImage, 'backImage': backImage})
             if (!getXpos) {
-                console.log("ddddocr服务异常")
+                console.log("ddddocr服务异常：今日还未验证,快去登录收获一下吧")
                 await sendMsg('ddddocr服务异常');
-                break
+                console.log(`=====================用户：${id}结束任务=====================`)
+                continue
             }
             console.log(getXpos)
+
             let toValidate = await commonPost(`/garden/slide_validate/toValidate`,JSON.stringify({"coordinate":getXpos.result}));
             console.log(toValidate.msg)
         } else {
             console.log(getValidateInfo.msg)
         }
+
         //每日签到
-        console.log("————————————")
-        console.log("开始每日签到")
+        console.log("\n开始每日签到")
         let dailySign = await commonPost("/garden/sign/dailySign",JSON.stringify({}));
-        if (dailySign.data.isTodayFirstSign) {
+        if (dailySign.data) {
             console.log(dailySign.data.tips)
         } else {
             console.log('今日已签到')
         }
+
         //种植
-        console.log("————————————")
-        console.log("开始种植")
+        console.log("\n开始种植")
         let getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
         console.log(`拥有：高粱*${getMemberInfo.data.sorghum} 小麦*${getMemberInfo.data.wheat} 酒曲*${getMemberInfo.data.wine_yeast} 酒*${getMemberInfo.data.wine} 水*${getMemberInfo.data.water} 肥料*${getMemberInfo.data.manure}`)
         let lands = await commonGet("/garden/sorghum/index");
@@ -203,9 +233,9 @@ async function main() {
                 }
             }
         }
+
         //任务
-        console.log("————————————")
-        console.log("开始做任务")
+        console.log("\n=====================开始做任务")
         let tasks = await commonGet("/garden/tasks/index");
         if (tasks) {
             for (let task of tasks.data) {
@@ -233,27 +263,27 @@ async function main() {
                 }
             }
         }
+
         //添加好友
-        console.log("————————————")
-        console.log("开始添加好友")
+        console.log("\n=====================开始添加好友")
         let addFriendToken = await commonGet("/garden/friends/addFriendToken");
         addFriendToken = addFriendToken.data;
         addFriendToken.friend_id = id
         console.log(`助力码：${JSON.stringify(addFriendToken)}`)
         //let add = await commonPost("/garden/friends/add",JSON.stringify({"friend_id":"15920333","time":"1714111454","token":"d75d8073df5b1d10507d6e30677d68c9"}));
         //console.log(add.msg)
+
         //制曲
-        console.log("————————————")
-        console.log("开始制曲")
+        console.log("\n=====================开始制曲")
         let code = 0
         while (code == 0) {
             let makeWineYeast = await makePost("/garden/wheat/makeWineYeast",'volumn=100');
             console.log(makeWineYeast.msg)
             code = makeWineYeast.err
         }
+
         //制酒
-        console.log("————————————")
-        console.log("开始制酒")
+        console.log("\n=====================开始制酒")
         let wine = await commonGet("/garden/gardenmemberwine/index");
         if (wine.total == 0) {
             console.log("没有正在酿造的酒，开始制酒")
@@ -267,20 +297,21 @@ async function main() {
                 console.log(harvestWine.msg)
             }
         }
-        //兑换
-        console.log("————————————")
-        console.log("兑换")
+
+        //兑换积分
+        console.log("\n=====================开始兑换")
         getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
         console.log(`拥有酒：${getMemberInfo.data.wine}`)
         if (XiJiu_Exchange) {
             let exchange = await commonGet(`/garden/Gardenjifenshop/exchange?wine=${getMemberInfo.data.wine}`);
             console.log(exchange.msg)
         }
+
         //查询积分
-        console.log("————————————")
-        console.log("查询积分")
+        console.log("\n=====================查询积分")
         getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
         console.log(`拥有积分：${getMemberInfo.data.integration} 拥有酒：${getMemberInfo.data.wine}\n`)
+        console.log(`=====================用户：${id}结束任务=====================\n\n`)
         notice += `用户：${id} 积分：${getMemberInfo.data.integration} 酒：${getMemberInfo.data.wine}\n`
     }
     if (notice) {
