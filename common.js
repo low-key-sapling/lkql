@@ -1,3 +1,21 @@
+//判断一个变量是否为空
+function isNotEmpty(variable) {
+    if (variable != null && variable !== '') {
+        // 如果变量不是null、undefined或空字符串，则进一步检查是否为数组
+        if (Array.isArray(variable) && variable.length > 0) {
+            // 变量是数组且不为空
+            return true;
+        } else if (typeof variable === 'object' && Object.keys(variable).length > 0) {
+            // 变量是对象并且有可枚举的属性
+            return true;
+        } else {
+            // 变量不是数组但也不是null、undefined或空字符串，或者变量是数组但为空
+            return typeof variable !== 'undefined' && variable !== '';
+        }
+    }
+    return false;
+}
+
 //获取当前日期
 function getCurrentDate() {
     const today = new Date();
@@ -483,4 +501,4 @@ function Env(t, e) {
 }
 
 // 将函数导出为模块的一部分
-module.exports = { getCurrentDate, Env };
+module.exports = { isNotEmpty, getCurrentDate, Env };
