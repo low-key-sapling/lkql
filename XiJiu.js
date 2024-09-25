@@ -2,7 +2,7 @@
  * Follow By: https://github.com/xzxxn777/Surge/blob/main/Script/XiJiu/
  * Follow By: https://github.com/darkbfly/ql/tree/184a474bbae955b5a81129164193162f94951df7/other
  * XiJiu.js
- * cron "32 7-23/1 * * *"
+ * cron "32 7-23/1 * * *" XiJiu.js
  * export XiJiu='[{"id": "1", "loginCode": "1"},{"id": "2", "loginCode": "2"}]'
  * export XiJiu_Exchange='true'//酒换积分
  * export OCR_SERVER="ocr服务"
@@ -31,7 +31,6 @@ let notice = '';
 })().catch((e) => {$.log(e)}).finally(() => {$.done({});});
 
 async function main() {
-    console.log('作者：@xzxxn777\n频道：https://t.me/xzxxn777\n群组：https://t.me/xzxxn7777\n自用机场推荐：https://xn--diqv0fut7b.com\n')
     for (const item of XiJiu) {
         id = item.id;
         loginCode = item.loginCode;
