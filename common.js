@@ -1,3 +1,9 @@
+/*
+ * 公共JS组件
+ * cron "32 7 * 7 *" common.js
+ * new Env('公共JS组件');
+*/
+
 //随机延时start到end秒,end必须大于start
 function randomSleep(start, end) {
     // 生成start到end秒之间的随机延时
