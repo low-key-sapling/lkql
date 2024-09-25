@@ -1,13 +1,14 @@
 //随机延时start到end秒,end必须大于start
 function randomSleep(start, end) {
-    // 生成10到30秒之间的随机延时
-    const delay = Math.random() * (end - start) + 10;
-
-    console.log(`Sleeping for ${delay} seconds...`);
-
-    setTimeout(() => {
-        console.log('Done sleeping!');
-    }, delay * 1000); // 将延时转换为毫秒
+    // 生成start到end秒之间的随机延时
+    return new Promise(resolve => {
+        const delay = Math.random() * (end - start + 1) + start;
+        console.log(`Sleeping for ${delay} seconds...`);
+        setTimeout(() => {
+            console.log('Done sleeping!');
+            resolve();
+        }, delay * 1000);
+    });
 }
 
 //判断一个变量是否为空
