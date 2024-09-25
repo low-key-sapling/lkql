@@ -1,5 +1,8 @@
 /**
- * cron "35 0-23/1 * * *" XiJiu.js
+ * Follow By: https://github.com/xzxxn777/Surge/blob/main/Script/XiJiu/
+ * Follow By: https://github.com/darkbfly/ql/tree/184a474bbae955b5a81129164193162f94951df7/other
+ * XiJiu.js
+ * cron "32 7-23/1 * * *"
  * export XiJiu='[{"id": "1", "loginCode": "1"},{"id": "2", "loginCode": "2"}]'
  * export XiJiu_Exchange='true'//酒换积分
  * export OCR_SERVER="ocr服务"
@@ -90,9 +93,14 @@ async function main() {
             console.log(getValidateInfo.msg)
         }
 
+        //填写推荐人
+        let personal_phone = await commonGet(`/member/recommend/personal_center?phone_no=15165150730`);
+        console.log(`personal_phone=${JSON.stringify(personal_phone)}`)
+
         //每日签到
         console.log("\n开始每日签到")
         let dailySign = await commonPost("/garden/sign/dailySign",JSON.stringify({}));
+        console.log("每日签到返回"+JSON.stringify(dailySign))
         if (dailySign.data) {
             console.log(dailySign.data.tips)
         } else {
@@ -303,14 +311,19 @@ async function main() {
         getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
         console.log(`拥有酒：${getMemberInfo.data.wine}`)
         if (XiJiu_Exchange) {
-            let exchange = await commonGet(`/garden/Gardenjifenshop/exchange?wine=${getMemberInfo.data.wine}`);
-            console.log(exchange.msg)
+            if (getMemberInfo.data.wine > 0) {
+                let exchange = await commonGet(`/garden/Gardenjifenshop/exchange?wine=${getMemberInfo.data.wine}`);
+                console.log(exchange.msg)
+            } else {
+                console.log(`没有酒了,快去酿酒吧`)
+            }
         }
 
         //查询积分
         console.log("\n=====================查询积分")
-        getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
-        console.log(`拥有积分：${getMemberInfo.data.integration} 拥有酒：${getMemberInfo.data.wine}\n`)
+        //getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
+        console.log(`拥有积分：${getMemberInfo.data.integration}\n拥有酒：${getMemberInfo.data.wine}\n拥有酒曲：${getMemberInfo.data['wine_yeast']}\n
+                     拥有高粱：${getMemberInfo.data.sorghum}\n拥有小麦：${getMemberInfo.data.wheat}\n`)
         console.log(`=====================用户：${id}结束任务=====================\n\n`)
         notice += `用户：${id} 积分：${getMemberInfo.data.integration} 酒：${getMemberInfo.data.wine}\n`
     }
