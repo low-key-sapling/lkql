@@ -1,5 +1,6 @@
 #   Follow By: https://github.com/HuaJi-ovo/Huaji_Script
-#   32 7 * 7 *
+#   cron: 55 8-23/3 * * *
+#   const $ = new Env("傻狗阅读");
 #   --------------------------------注释区--------------------------------
 #   入口:微信打开https://api.yd.dgtech.top/twyd/agent/user/login?aid=dabd8febf0c64c31b79c4785034e0de9&refererUserUuid=04affaac6b304435a253cce7bfa44cd3
 #
