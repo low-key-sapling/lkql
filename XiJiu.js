@@ -330,8 +330,9 @@ async function main() {
         //查询积分
         console.log("\n=====================查询积分")
         //getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
-        console.log(`拥有积分：${getMemberInfo.data.integration}\n拥有酒：${getMemberInfo.data.wine}\n拥有酒曲：${getMemberInfo.data['wine_yeast']}\n
-                     拥有高粱：${getMemberInfo.data.sorghum}\n拥有小麦：${getMemberInfo.data.wheat}\n`)
+        console.log(`拥有积分：${getMemberInfo.data.integration}  拥有酒酒：${getMemberInfo.data.wine}\n`+
+                    `拥有酒曲：${getMemberInfo.data['wine_yeast']}    拥有高粱：${getMemberInfo.data.sorghum}\n`+
+                    `拥有小麦：${getMemberInfo.data.wheat}\n`)
         console.log(`=====================用户：${id}结束任务=====================\n\n`)
         notice += `用户：${id} 积分：${getMemberInfo.data.integration} 酒：${getMemberInfo.data.wine}\n`
     }
