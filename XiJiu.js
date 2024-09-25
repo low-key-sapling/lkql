@@ -15,6 +15,7 @@ const $ = new Env('习酒');
 const notify = $.isNode() ? require('../sendNotify') : '';
 const XiJiu = ($.isNode() ? JSON.parse(process.env.XiJiu) : $.getjson("XiJiu")) || [];
 const XiJiu_Exchange = ($.isNode() ? process.env.XiJiu_Exchange : $.getdata("XiJiu_Exchange")) === 'true' || false;
+const XiJiu_phone = ($.isNode() ? process.env.XiJiu_phone : $.getdata("XiJiu_phone")) === 'true' || false;
 const OCR_SERVER = ($.isNode() ? process.env.OCR_SERVER : $.getdata("OCR_SERVER")) || 'https://ddddocr.xzxxn7.live';
 let cropType = [{"1":"高粱"},{"2":"小麦"}];
 let loginCode = '';
@@ -93,17 +94,22 @@ async function main() {
         }
 
         //填写推荐人
-        let personal_phone = await commonGet(`/member/recommend/personal_center?phone_no=15165150730`);
-        console.log(`personal_phone=${JSON.stringify(personal_phone)}`)
+        if (!XiJiu_phone) {
+            let personal_phone = await commonGet(`/member/recommend/personal_center?phone_no=15165150730`);
+            console.log(`personal_phone=${JSON.stringify(personal_phone)}`)
+        }
 
         //每日签到
         console.log("\n开始每日签到")
-        let dailySign = await commonPost("/garden/sign/dailySign",JSON.stringify({}));
-        console.log("每日签到返回"+JSON.stringify(dailySign))
-        if (dailySign.data) {
-            console.log(dailySign.data.tips)
+        if (xiJiuSign) {
+            let dailySign = await commonPost("/garden/sign/dailySign", JSON.stringify({}));
+            if (dailySign.data.isTodayFirstSign) {
+                console.log(dailySign.data.tips)
+            } else {
+                console.log('今日已签到')
+            }
         } else {
-            console.log('今日已签到')
+            console.log('⛔️今天已经签到过啦,明天再来呀')
         }
 
         //种植
