@@ -1,27 +1,16 @@
 /*
-微信小程序：习酒会员俱乐部
-默认填写作者推荐码 需要修改在657行修改
-变量为xjhd
-抓包域名 anti-channeling/public/index.php/api/v2/
-查看请求头的login_code
-比如 export xjhd='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.XXXXXX'
-多账号@隔开
-比如 export xjhd='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.XXXXXX'@'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.XXXXXX'
+ * 公共请求组件
+ * cron "32 7 * 7 *" common_request.js
 */
-//定时 0 */2 * * * 吧
-const $ = new Env('微信小程序-习酒');
-var request = require("request");
-let status;
-status = (status = ($.getval("xjstatus") || "1")) > 1 ? `${status}` : ""; // 账号扩展字符
-let xjhdArr = [], xjcount = ''
-const notify = $.isNode() ? require('./sendNotify') : '';
-let xjhd = $.isNode() ? (process.env.xjhd ? process.env.xjhd : "") : ($.getdata('xjhd') ? $.getdata('xjhd') : "")
 
-let allMessage = '';
-let xjhds = ""
-const logs = 0;
-const host = 'https://xcx.exijiu.com/'
-const host1 = 'https://apimallwm.exijiu.com/'
+//引入公共组件库
+const {isNotEmpty, getCurrentDate, Env} = require("./common.js");
+
+const $ = new Env('公共request组件');
+const request = require("request");
+
+const notify = $.isNode() ? require('./sendNotify') : '';
+
 var hours = new Date().getHours();
 var s = new Date().getMinutes();
 
