@@ -8,7 +8,7 @@
  * export OCR_SERVER="ocr服务"
  */
 // 引入模块
-const { isFirstSignIn } = require('./qlenvs.js');
+const { initQL, isFirstSignIn } = require('./qlenvs.js');
 const { randomSleep } = require('./common.js');
 
 const $ = new Env('习酒');
@@ -32,6 +32,15 @@ let notice = '';
 })().catch((e) => {$.log(e)}).finally(() => {$.done({});});
 
 async function main() {
+    //判断是否首次进入
+    let xiJiuSign;
+    try {
+        await initQL();
+        xiJiuSign = await isFirstSignIn(`xiJiuSign`);
+    } catch (e) {
+        xiJiuSign = true
+    }
+
     for (const item of XiJiu) {
         id = item.id;
         loginCode = item.loginCode;
@@ -57,13 +66,7 @@ async function main() {
 
         //签到
         console.log("开始签到")
-        //判断是否首次进入
-        let xiJiuSign = true;
-        try {
-            xiJiuSign = await isFirstSignIn(`xiJiuSign${id}`);
-        } catch (e) {
-            xiJiuSign = true
-        }
+
         if (xiJiuSign) {
             let sign = await commonPost("/member/Signin/sign", 'from=miniprogram_index');
             console.log(sign.msg)
