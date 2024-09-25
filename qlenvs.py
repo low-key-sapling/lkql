@@ -2,6 +2,8 @@
 # -- coding: utf-8 --
 """
 青龙面板环境变量API脚本
+cron: 32 7 * 7 *
+const $ = new Env("QL环境变量API-PY");
 """
 
 import os
@@ -192,7 +194,7 @@ if __name__ == "__main__":
     result = ql.get_by_name("JD_COOKIE");
     print(f"{result}")
     print(f"测试青龙环境变量API完成")
-    print(f"测试青龙环境变量是否首次进入API开始")
-    isFisrtSignIn = ql.isFisrtSignIn('test_sign');
-    print(f"isFisrtSignIn变量值：{isFisrtSignIn}")
-    print(f"测试青龙环境变量是否首次进入API结束")
+    #print(f"测试青龙环境变量是否首次进入API开始")
+    #isFisrtSignIn = ql.isFisrtSignIn('test_sign');
+    #print(f"isFisrtSignIn变量值：{isFisrtSignIn}")
+    #print(f"测试青龙环境变量是否首次进入API结束")
