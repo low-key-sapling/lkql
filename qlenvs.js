@@ -71,6 +71,8 @@ async function initQL() {
     let id = "S-aL4AvQ_tQ-"
     let secret = "9YYMRxvxZ7t9yi-8JzFsfnQc"
     let url = `${address}/open/auth/token?client_id=${id}&client_secret=${secret}`
+    //每次登录置空,不然循环调用有问题
+    qlAuth = "";
     let result = await commonGet(url);
     if (result.code === 200) {
         console.log(`登录成功`)
@@ -189,7 +191,6 @@ async function deleteEnv(envs) {
  * @returns {Promise<void>}
  */
 async function isFirstSignIn(env_name) {
-    await initQL();
     let currentDate = getCurrentDate();
     let result = await getEnvByName(env_name);
     if (!isNotEmpty(result)) {
