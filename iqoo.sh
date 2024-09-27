@@ -5,7 +5,18 @@
 #微信小程序IQOO社区，抓包authorization，青龙设置变量名iqoo值为authorizatio@要兑换的商品id，抓一次30天有效
 #600356，哔哩哔哩 600336，肯德基10元 600335，必胜客20 600334，Qq音乐 600332，腾讯视频
 #cron:55 14 * * *
-iqoos=($(echo $iqoo | sed 's/&/ /g'))
+
+# 判断字符串是否包含 &
+if [[ $iqoo =~ '&' ]]; then
+    echo "以&分割"
+    #以&分割
+    iqoos=($(echo $iqoo | sed 's/&/ /g'))
+else
+    echo "以换行分割"
+    #以换行分割
+    readarray -t iqoos <<< "$iqoo"
+fi
+
 url=bbs-api.iqoo.com
 key=2618194b0ebb620055e19cf9811d3c13
 dh(){
