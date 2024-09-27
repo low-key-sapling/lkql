@@ -16,8 +16,8 @@ https://mcs-mimp-web.sf-express.com/mcs-mimp/share/weChat/shareGiftReceiveRedire
 https://mcs-mimp-web.sf-express.com/mcs-mimp/share/app/shareRedirect
 每天跑一到两次就行
 
-cron: 11 6,11,12,15,18 * * *
-const $ = new Env("顺丰速运");
+cron: 11 6,11,12,15,18 * * * SFSY.js
+const $ = new Env("顺丰速运-JS");
 */
 const _0x1366a8 = _0x1c156a("顺丰速运"),
     _0x149a58 = require("got"),
