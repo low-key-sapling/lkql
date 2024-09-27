@@ -104,7 +104,7 @@ for s in $(seq 0 1 $((${#iqoos[@]}-1)));do
 	c='userId='$(echo "$token" | awk -F "." '{print $2}' | awk -F "." '{print $1}' | base64 -d 2> /dev/null | jq -r '.sub')''
 	g
 	echo "当前积分$(echo "$tmp" | jq -r '.Data.score')"
-	wait
+	sleep 5
 done
 if test $(date +'%u') -eq 3 ; then
 	sm=$(($(date -d 'tomorrow 15:00:00' +%s)-$(date +%s)-86400))
@@ -119,4 +119,5 @@ if test $(date +'%u') -eq 3 ; then
 fi
 
 #退出程序
+echo "执行完毕,退出程序"
 exit
