@@ -10,7 +10,7 @@
 #   多号分割方式 [ @ 或 换行 或 新建同名变量 ]
 #   corn: 一天一次即可
 #   corn: 33 9 * * *
-#   new
+#   const $ = new Env("叮叮联盟");
 #   检测配置：
 #   在yuanshen_apptoken,yuanshen_topicid分别填入你的wxpusher的apptoken和topicid
 #   注意是填的topicid而不是你的uid 不要傻乎乎把uid填上去 填了不推送文章包黑号的
