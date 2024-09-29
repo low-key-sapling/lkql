@@ -116,7 +116,8 @@ class RUN():
                         print(f'开始浏览保险产品......')
                         for i in range(3):
                             self.view_insurance_task()
-                            time.sleep(16)
+                            time.sleep(17)
+                            self.do_task_collect(taskSort)
                     # 分享朋友圈
                     elif item["taskSort"] == 112 and taskStatus == 0:
                         self.do_share_task()
@@ -183,9 +184,9 @@ class RUN():
         json_data = {
             'access_token': self.access_token,
             'activity_code': '100026',
-            'random_num': '78001861E13',
-            'timestamp': 1720670658778,
-            'sign': 'f5792d268d6c4b66b3b4e61d39bda284b3d0cdd9',
+            'random_num': '431F17989B8',
+            'timestamp': 1727594446581,
+            'sign': '77c63aecec7084823feca3f88921b6576b571a31',
             'platform': 7,
             'mission_code': '33',
         }
