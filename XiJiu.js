@@ -198,17 +198,25 @@ async function main() {
                         console.log(seed.msg)
                     }
                 } else {
-                    let code = 0
-                    while (code == 0) {
-                        let watering = await commonPost(`/garden/sorghum/watering`,JSON.stringify({"id":land.id}));
-                        console.log(watering.msg)
-                        code = watering.err
+                    if (getMemberInfo.data.water > 0) {
+                        let code = 0
+                        while (code == 0) {
+                            let watering = await commonPost(`/garden/sorghum/watering`, JSON.stringify({"id": land.id}));
+                            console.log(watering.msg)
+                            code = watering.err
+                        }
+                    } else {
+                        console.log(`没有水了,等一会儿再来浇水吧`)
                     }
-                    code = 0
-                    while (code == 0) {
-                        let manuring = await commonPost(`/garden/sorghum/manuring`,JSON.stringify({"id":land.id}));
-                        console.log(manuring.msg)
-                        code = manuring.err
+                    if (getMemberInfo.data.manure > 0) {
+                        let code = 0
+                        while (code == 0) {
+                            let manuring = await commonPost(`/garden/sorghum/manuring`, JSON.stringify({"id": land.id}));
+                            console.log(manuring.msg)
+                            code = manuring.err
+                        }
+                    } else {
+                        console.log(`没有肥料了,等一会儿再来施肥吧`)
                     }
                 }
                 lands = await commonGet("/garden/sorghum/index");
@@ -237,14 +245,14 @@ async function main() {
                 }
                 let code = 0
                 while (code == 0) {
-                    let watering = await commonPost(`/garden/sorghum/watering`,JSON.stringify({"id":land.id}));
-                    console.log(watering.msg)
+                    let watering = await commonPost(`/garden/sorghum/watering`, JSON.stringify({"id": land.id}));
+                    console.log(`watering.msg=${watering.msg},watering.err=${watering.err}`)
                     code = watering.err
                 }
                 code = 0
                 while (code == 0) {
                     let manuring = await commonPost(`/garden/sorghum/manuring`,JSON.stringify({"id":land.id}));
-                    console.log(manuring.msg)
+                    console.log(`manuring.msg=${manuring.msg},manuring.err=${manuring.err}`)
                     code = manuring.err
                 }
             }
