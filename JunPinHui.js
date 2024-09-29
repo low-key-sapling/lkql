@@ -1,4 +1,5 @@
 /**
+ * Follow By: https://github.com/xzxxn777/Surge/blob/main/Script/XiJiu
  * cron "11 7,17 * * *" JunPinHui.js
  * export JunPinHui="账号1&密码1 账号2&密码2"
  */
