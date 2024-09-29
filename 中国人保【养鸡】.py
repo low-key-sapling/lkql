@@ -321,9 +321,9 @@ class RUN():
     def main(self):
         print(f"\n======== ▷ 云养小鸡 ◁ ========")
         if self.chicken_login():
-            # 抽奖
-            self.lottery()
-            time.sleep(random.randint(5, 10))
+            # 抽奖,不再自动抽奖，攒币如有需要自己去抽奖
+            # self.lottery()
+            # time.sleep(random.randint(5, 10))
             
             isFisrtSignIn = True;
             try:
