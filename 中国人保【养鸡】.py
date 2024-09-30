@@ -360,13 +360,13 @@ class RUN():
                     # 捡鸡蛋
                     self.chicken_collect_egg()
                 else:
-                    # 喂鸡
                     print(f'🐔捡鸡蛋捡个屁 | 还没下蛋呢， 进度: {eggPer}/100')
-                    if chickfoodStatus == '0' and foodCount >= 180:
-                        self.feed_chicken()
-                        time.sleep(random.randint(10, 15))
-                    elif foodCount < 180:
-                        print(f'🐔喂鸡失败, 饲料不足 | 剩余饲料: {foodCount}g/需要饲料: 180g')
+                # 喂鸡
+                if chickfoodStatus == '0' and foodCount >= 180:
+                    self.feed_chicken()
+                    time.sleep(random.randint(10, 15))
+                elif foodCount < 180:
+                    print(f'🐔喂鸡失败, 饲料不足 | 剩余饲料: {foodCount}g/需要饲料: 180g')
             time.sleep(random.randint(5, 10))
 
             # 卖鸡蛋
