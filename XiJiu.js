@@ -92,6 +92,11 @@ async function main() {
 
             let toValidate = await commonPost(`/garden/slide_validate/toValidate`,JSON.stringify({"coordinate":getXpos.result}));
             console.log(toValidate.msg)
+            if (toValidate.msg.includes("失败")) {
+                console.log("自动验证失败，今日还未验证,快去登录收获一下吧")
+                console.log(`=====================用户：${id}结束任务=====================`)
+                continue;
+            }
         } else {
             console.log(getValidateInfo.msg)
         }
@@ -243,17 +248,25 @@ async function main() {
                         console.log(seed.msg)
                     }
                 }
-                let code = 0
-                while (code == 0) {
-                    let watering = await commonPost(`/garden/sorghum/watering`, JSON.stringify({"id": land.id}));
-                    console.log(`watering.msg=${watering.msg},watering.err=${watering.err}`)
-                    code = watering.err
+                if (getMemberInfo.data.water > 0) {
+                    let code = 0
+                    while (code == 0) {
+                        let watering = await commonPost(`/garden/sorghum/watering`, JSON.stringify({"id": land.id}));
+                        console.log(`watering.msg=${watering.msg},watering.err=${watering.err}`)
+                        code = watering.err
+                    }
+                } else {
+                    console.log(`没有水了,等一会儿再来浇水吧`)
                 }
-                code = 0
-                while (code == 0) {
-                    let manuring = await commonPost(`/garden/sorghum/manuring`,JSON.stringify({"id":land.id}));
-                    console.log(`manuring.msg=${manuring.msg},manuring.err=${manuring.err}`)
-                    code = manuring.err
+                if (getMemberInfo.data.manure > 0) {
+                    let code = 0
+                    while (code == 0) {
+                        let manuring = await commonPost(`/garden/sorghum/manuring`, JSON.stringify({"id": land.id}));
+                        console.log(`manuring.msg=${manuring.msg},manuring.err=${manuring.err}`)
+                        code = manuring.err
+                    }
+                } else {
+                    console.log(`没有肥料了,等一会儿再来施肥吧`)
                 }
             }
         }
