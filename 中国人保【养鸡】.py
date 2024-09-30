@@ -111,11 +111,11 @@ class RUN():
                             time.sleep(5)
                             self.do_task_collect(taskSort)
                             time.sleep(5)
-                    # 浏览保险产品【废的else分支】
+                    # 浏览保险产品
                     elif item["taskSort"] == 33:
                         print(f'开始浏览保险产品......')
                         for i in range(3):
-                            self.view_insurance_task()
+                            self.view_news_task(taskSort)
                             time.sleep(17)
                             self.do_task_collect(taskSort)
                     # 分享朋友圈
