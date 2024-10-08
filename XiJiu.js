@@ -93,7 +93,6 @@ async function main() {
             let toValidate = await commonPost(`/garden/slide_validate/toValidate`,JSON.stringify({"coordinate":getXpos.result}));
             console.log(toValidate.msg)
             if (toValidate.msg.includes("失败")) {
-                updateEnvByName(`xiJiuSign`,'-1');
                 try {
                     updateEnvByName(`xiJiuSign`,'-1');
                 } catch (e) {
