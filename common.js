@@ -4,6 +4,54 @@
  * new Env('公共JS组件');
 */
 
+// cron: 1 *
+// 获取当前日期
+const getCurrDay = (targetTime) => {
+    // 创建一个新的 Date 对象，它将包含当前的日期和时间
+    const currentDate = targetTime?new Date(targetTime):new Date();
+    // 获取当前日期的年、月、日
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，因此需要加 1
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds());
+
+    // 将年、月、日拼接成所需格式的日期字符串
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
+    return formattedDate
+}
+//监测时间
+const checkTime = async(args = {})=>{
+    const {year,month,date,hours,minutes,seconds,milliseconds} = args
+    const now = new Date();
+    const targetTime = new Date(
+        year??now.getFullYear(),
+        month??now.getMonth(),
+        date??now.getDate(),
+        hours??now.getHours(),
+        minutes??now.getMinutes(),
+        seconds??now.getSeconds(),
+        milliseconds??now.getMilliseconds()
+    );
+
+    const delay = targetTime - now;
+    console.log(delay<0?'已超过目标时间立即执行':`等待${delay/1000}秒后 预计${getCurrDay(targetTime)}执行`);
+
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            console.log('开始执行任务!');
+            console.log('当前时间',getCurrDay());
+            resolve();
+        }, delay);
+    });
+}
+//延时函数
+const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
+//随机生成1-300秒的延迟
+const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
 //随机延时start到end秒,end必须大于start
 function randomSleep(start, end) {
     // 生成start到end秒之间的随机延时
@@ -520,4 +568,13 @@ function Env(t, e) {
 }
 
 // 将函数导出为模块的一部分
-module.exports = {randomSleep, isNotEmpty, getCurrentDate, Env };
+module.exports = {
+    randomSleep,
+    isNotEmpty,
+    getCurrentDate,
+    Env,
+    getCurrDay,
+    checkTime,
+    sleep,
+    random
+}
