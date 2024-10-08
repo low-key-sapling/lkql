@@ -22,7 +22,7 @@ let scriptVersionNow = "1.0.0";
 let msg = "";
 const {
     sleep,getCurrDay,checkTime
-} = require('./utils.js')
+} = require('./common.js')
 
 
 
