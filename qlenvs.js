@@ -167,6 +167,30 @@ async function updateEnv(env) {
 }
 
 /**
+ * 更新环境变量
+ * @param env
+ *         env:{
+ *           'id':'',
+ *           'name':'',
+ *           'value':'',
+ *           'remarks':''
+ *         }
+ * @returns {Promise<void>}
+ */
+async function updateEnvByName(env_name,env_value) {
+
+    let result = await getEnvByName(env_name);
+    let env_value_old = result[0].value
+    let env_id = result[0].id
+    let update_envs = {
+        "id": env_id,
+        "name": env_name,
+        "value": env_value
+    }
+    await updateEnv(JSON.stringify(update_envs))
+}
+
+/**
  * 删除环境变量
  * @param envs
  *         envs:[
@@ -433,5 +457,6 @@ async function slidePost(body) {
 // 导出变量和函数
 module.exports = {
     initQL,
-    isFirstSignIn
+    isFirstSignIn,
+    updateEnvByName
 };
