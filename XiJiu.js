@@ -8,7 +8,7 @@
  * export OCR_SERVER="ocr服务地址"
  */
 // 引入模块
-const { initQL, isFirstSignIn } = require('./qlenvs.js');
+const { initQL, isFirstSignIn,updateEnvByName } = require('./qlenvs.js');
 const { randomSleep } = require('./common.js');
 
 const $ = new Env('习酒');
@@ -93,6 +93,12 @@ async function main() {
             let toValidate = await commonPost(`/garden/slide_validate/toValidate`,JSON.stringify({"coordinate":getXpos.result}));
             console.log(toValidate.msg)
             if (toValidate.msg.includes("失败")) {
+                updateEnvByName(`xiJiuSign`,'-1');
+                try {
+                    updateEnvByName(`xiJiuSign`,'-1');
+                } catch (e) {
+                    xiJiuSign = true
+                }
                 console.log("自动验证失败，今日还未验证,快去登录收获一下吧")
                 console.log(`=====================用户：${id}结束任务=====================`)
                 continue;
