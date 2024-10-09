@@ -2,7 +2,8 @@
  * Follow By: https://github.com/wudongdefeng/wool/blob/main/pddFruit.js
  * [task_local]
  * 拼多多果园
- * 15 8 * * * pddFruit.js, tag=拼多多果园, enabled=true
+ * 15 8 * * * PDDFruit.js
+ * tag=拼多多果园, enabled=true
  * 搜mobile.yangkeduo.com，请求头的AccessToken，设置ddgyck 多账号@分割
 */
 const $ = new Env('拼多多果园');
