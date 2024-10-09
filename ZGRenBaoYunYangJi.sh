@@ -1,7 +1,7 @@
 # new Env('人保小鸡');
 #by-莫老师，版本1.5，一天20币
 #中国人保app内的小鸡爱运动，抓包https://m.picclife.cn/chicken/?user_id，创建变量rbxj，值为user_id
-#cron:0/20 * * * *
+#cron:0 8 * * *
 time=$(date +"%Y-%m-%d")
 user=($(echo $rbxj | sed 's/&/ /g'))
 url=m.picclife.cn

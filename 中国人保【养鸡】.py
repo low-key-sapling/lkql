@@ -297,7 +297,9 @@ class RUN():
         if response_json["code"] == 200:
             userName = response_json["result"]["userName"]
             coinCount = response_json["result"]["coinCount"]
-            msg = f'🐔主人: {userName} | 金币: {coinCount}个'
+            eggCount = response_json["result"]["eggCount"]
+            msg = f'🐔主人: {userName} | 金币: {coinCount}个 | 鸡蛋: {eggCount}个'
+            print(msg)
             if coinCount >= 600:
                 send("中国人保养鸡金币达标通知", msg)
             return True
@@ -318,6 +320,31 @@ class RUN():
             time.sleep(1)
         send("中国人保养鸡抽奖结果", message)
 
+    # 使用道具3
+    def v2UseCarNo3(self):
+        params = {
+            'awardType': '3'
+        }
+        response = requests.post('https://m.picclife.cn/chicken-api/p/chicken/v2UseCarNo', params=params,
+                                 headers=self.mHeaders)
+        response_json = response.json()
+        if response_json["code"] == 200:
+            print(f'🐔道具使用成功'+response_json["message"])
+        else:
+            print(f'❌道具使用失败'+response_json["message"])
+
+    # 使用道具2
+    def v2UseCarNo2(self):
+        params = {
+            'awardType': '2'
+        }
+        response = requests.post('https://m.picclife.cn/chicken-api/p/chicken/v2UseCarNo', params=params,
+                                 headers=self.mHeaders)
+        response_json = response.json()
+        if response_json["code"] == 200:
+            print(f'🐔道具使用成功'+response_json["message"])
+        else:
+            print(f'❌道具使用失败'+response_json["message"])
 
     def main(self):
         print(f"\n======== ▷ 云养小鸡 ◁ ========")
@@ -368,6 +395,12 @@ class RUN():
                 elif foodCount < 180:
                     print(f'🐔喂鸡失败, 饲料不足 | 剩余饲料: {foodCount}g/需要饲料: 180g')
             time.sleep(random.randint(5, 10))
+
+            # 使用道具
+            self.v2UseCarNo2()
+            time.sleep(random.randint(2, 5))
+            self.v2UseCarNo3()
+            time.sleep(random.randint(2, 5))
 
             # 卖鸡蛋
             self.chicken_sell_egg_all()
