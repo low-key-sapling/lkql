@@ -1,6 +1,7 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
+# Follow By: https://github.com/zjk2017/ArcadiaScriptPublic/blob/f02a8480dc229ee0deea953d8a46cf3d1c1d15b0/qianyi/
 # ✨✨✨ @Author CHERWIN✨✨✨  每周三会员日的游戏不一样自己做
 # -------------------------------
 # cron: 51 9 * * *
