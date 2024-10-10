@@ -160,7 +160,7 @@ async function main() {
                         //取消点赞
                         time = Math.floor(Date.now() / 1e3)
                         let unLike = await commonPost('/v3/posts.update',{"id":threadId,"postId":postId,"data":{"attributes":{"isLiked":false}}},getSign('POST','/api/v3/posts.update',{"id":threadId,"postId":postId,"data":{"attributes":{"isLiked":false}}}));
-                        console.log(unLike)
+                        console.log(`取消点赞：${unLike.Message}`)
                     }
                 }
             }
@@ -187,6 +187,7 @@ async function main() {
         console.log("查询酷币")
         time = Math.floor(Date.now() / 1e3)
         let user = await commonGet(`/v3/user?userId=${id}`,getSign('GET','/api/v3/user',{"userId":id}));
+        console.log(`拥有酷币: ${user}\n`)
         console.log(`拥有酷币: ${user.Data.score}\n`)
         notice += `用户：${id} 拥有酷币: ${user.Data.score}\n`
     }
