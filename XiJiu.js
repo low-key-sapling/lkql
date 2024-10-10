@@ -310,7 +310,7 @@ async function main() {
         console.log("\n=====================开始添加好友")
         let addFriendToken = await commonGet("/garden/friends/addFriendToken");
         addFriendToken = addFriendToken.data;
-        addFriendToken.friend_id = id
+        //addFriendToken.friend_id = id
         console.log(`助力码：${JSON.stringify(addFriendToken)}`)
         //let add = await commonPost("/garden/friends/add",JSON.stringify({"friend_id":"15920333","time":"1714111454","token":"d75d8073df5b1d10507d6e30677d68c9"}));
         //console.log(add.msg)
