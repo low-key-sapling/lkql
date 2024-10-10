@@ -1,5 +1,5 @@
 /**
- * cron 9 9 * * *  xx.js
+ * cron 9 9 * * *  xinXi.js
  * 变量名: xinxi
  * 每天运行一次就行
  * 报错是正常情况
@@ -40,6 +40,9 @@ class Task {
                 await this.task_like(this.goodsList[0])
             }
 
+            //帖子评论
+            await this.task_posts()
+
         }
 
     }
@@ -62,7 +65,7 @@ class Task {
         try {
             let result = await this.taskRequest("get", `https://api.xinc818.com/mini/user`)
             //console.log(options);
-            console.log(result);
+            //console.log(result);
             if (result.code == 0) {
                 $.log(`✅账号[${this.index}]  【${result.data.nickname}】积分【${result.data.integral}】🎉`)
                 this.userId = result.data.id
@@ -79,7 +82,7 @@ class Task {
         try {
             let result = await this.taskRequest("get", `https://api.xinc818.com/mini/dailyTask/browseGoods/22`)
             //console.log(options);
-            console.log(result);
+            //console.log(result);
             if (result.code == 0) {
                 if (result.data !== null) {
                     $.log(`✅账号[${this.index}]  完成浏览30s成功 获得【${result.data.singleReward}】`)
@@ -106,7 +109,7 @@ class Task {
             if (goodsResult.data) {
                 let likeResult = await this.taskRequest("post", `https://api.xinc818.com/mini/live/likeLiveItem`, { "isLike": true, "dailyTaskId": 20, "productId": Number(goodsResult.data.outerId) })
                 //console.log(options);
-                console.log(likeResult);
+                //console.log(likeResult);
                 if (likeResult.code == 0) {
                     if (likeResult.data !== null) {
                         $.log(`✅账号[${this.index}]  完成点击想要任务成功 获得【${likeResult.data.singleReward}】`)
@@ -132,7 +135,7 @@ class Task {
         try {
             let result = await this.taskRequest("post", `https://api.xinc818.com/mini/user/follow`, { "decision": true, "followUserId": pusherId })
             //console.log(options);
-            console.log(result);
+            //console.log(result);
             if (result.code == 0) {
                 if (result.data !== null) {
                     $.log(`✅账号[${this.index}]  完成关注用户任务成功 获得【${result.data.singleReward}】`)
@@ -141,6 +144,62 @@ class Task {
                 }
             } else {
                 console.log(`❌账号[${this.index}]  完成关注用户任务失败`);
+                console.log(result);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    //获取帖子列表并进行评价
+    async task_posts() {
+        try {
+            let random = Math.floor(Math.random() * 10);
+            let posts = ['哇哦,真不错啊','你只管负责精彩，上帝自有安排。','三人行而必有我师焉。斯言善哉。','感谢分享！','值得关注！','我也来分享一下','点赞！','学习了！','赞一个！','期待更多！'];
+            let result = await this.taskRequest("get", `https://api.xinc818.com/mini/community/home/posts?pageNum=1&pageSize=10&queryType=1&position=2`)
+            //console.log(options);
+            //console.log(result);
+            if (result.code == 0) {
+                if (result.data !== null) {
+
+                    let id = result.data.list[random].id;
+                    let content = result.data.list[random].content;
+                    $.log(`✅账号[${this.index}]  获取到帖子 【${id}--${content}】`)
+
+                    // 进行评论
+                    await this.task_postsComments(id, posts[random])
+                } else {
+                    console.log(`❌账号[${this.index}]  获取到帖子失败`);
+                }
+
+            } else {
+                console.log(`❌账号[${this.index}]  获取到帖子失败`);
+
+                console.log(result);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    //进行评论
+    async task_postsComments(postsId, content) {
+        console.log(`postsId=${postsId},content=${content}`)
+        try {
+            let result = await this.taskRequest("post", `https://api.xinc818.com/mini/postsComments`, {
+                "postsId": postsId,
+                "content": content
+            })
+            console.log(result)
+            if (result.code == 0) {
+                if (result.data !== null) {
+                    $.log(`✅账号[${this.index}]  完成${result.data.taskResult.taskName}成功 获得【${result.data.taskResult.singleReward}】`)
+                } else {
+                    console.log(`❌账号[${this.index}]  完成参与评论任务失败`);
+                    console.log(result);
+                }
+            } else {
+                console.log(`❌账号[${this.index}]  完成参与评论任务失败`);
                 console.log(result);
             }
         } catch (e) {
@@ -175,7 +234,7 @@ class Task {
         try {
             let result = await this.taskRequest("get", `https://api.xinc818.com/mini/dailyTask/share`)
             //console.log(options);
-            console.log(result);
+            //console.log(result);
             if (result.code == 0) {
                 if (result.data !== null) {
                     $.log(`✅账号[${this.index}]  完成分享成功 获得【${result.data.singleReward}】`)
@@ -197,7 +256,7 @@ class Task {
         try {
             let result = await this.taskRequest("get", `https://cdn-api.xinc818.com/mini/posts/sorts?sortType=COMMENT&pageNum=1&pageSize=10&groupClassId=0`)
             //console.log(options);
-            console.log(result);
+            //console.log(result);
             if (result.code == 0) {
                 if (result.data.list.length > 0) {
                     for (let i = 0; i < 2; i++)
@@ -216,7 +275,7 @@ class Task {
         try {
             let result = await this.taskRequest("get", `https://cdn-api.xinc818.com/mini/integralGoods?orderField=sort&orderScheme=DESC&pageSize=10&pageNum=1`)
             //console.log(options);
-            console.log(result);
+            //console.log(result);
             if (result.code == 0) {
                 if (result.data.list.length > 0) {
                     for (let i = 0; i < 2; i++)
