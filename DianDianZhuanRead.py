@@ -7,7 +7,7 @@
 #   支持多号,多号之间用换行符(回车键)
 #   提现功能不再可用，请自行提现。。。
 #   const $ = new Env('点点赚');
-#   cron 7 8-23/3 * * *
+#   cron: 7 8-23/3 * * *
 
 import hashlib
 import json
