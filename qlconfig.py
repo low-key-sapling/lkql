@@ -2,6 +2,8 @@
 # -- coding: utf-8 --
 """
 青龙面板配置文件API脚本
+cron: 32 7 * 7 *
+const $ = new Env("青龙面板配置文件API-PY");
 """
 
 import requests
@@ -135,8 +137,8 @@ class qlconfig():
 
 if __name__ == "__main__":
  
-    self.log(f"测试青龙配置文件API开始")
+    print(f"测试青龙配置文件API开始")
     ql_config = qlconfig()
     result = ql_config.list();
-    self.log(f"{result[0]}")
-    self.log(f"测试青龙配置文件API完成")
+    print(f"{result[0]}")
+    print(f"测试青龙配置文件API完成")
