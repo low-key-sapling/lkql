@@ -225,13 +225,17 @@ class RUN:
                     response = self.do_request(url, data=json_data)
                     # print(response)
                     if response.get('success') == True:
-                        goodsList = response["obj"][0]["goodsList"]
-                        for goods in goodsList:
-                            exchangeTimesLimit = goods['exchangeTimesLimit']
-                            if exchangeTimesLimit >= 1:
-                                self.goodsNo = goods['goodsNo']
-                                print(f'领取生活权益：当前选择券号：{self.goodsNo}')
-                                self.get_coupom()
+                        for goodsList in response["obj"]:
+                            breakFlag = True
+                            for goods in goodsList["goodsList"]:
+                                exchangeTimesLimit = goods['exchangeTimesLimit']
+                                if exchangeTimesLimit >= 1:
+                                    self.goodsNo = goods['goodsNo']
+                                    print(f'领取生活权益：当前选择券号：{self.goodsNo}')
+                                    breakFlag = self.get_coupom()
+                                    break
+                            if not breakFlag:
+                                print(f'>领券失败！继续下一个！')
                                 break
                     else:
                         print(f'>领券失败！原因：{response.get("errorMessage")}')
@@ -315,8 +319,10 @@ class RUN:
         response = self.do_request(url, data=json_data)
         if response.get('success') == True:
             print(f'>领券成功！')
+            return True
         else:
             print(f'>领券失败！原因：{response.get("errorMessage")}')
+            return False
 
     def get_coupom_list(self):
         print('>>>获取生活权益券列表')
@@ -332,13 +338,17 @@ class RUN:
         response = self.do_request(url, data=json_data)
         # print(response)
         if response.get('success') == True:
-            goodsList = response["obj"][0]["goodsList"]
-            for goods in goodsList:
-                exchangeTimesLimit = goods['exchangeTimesLimit']
-                if exchangeTimesLimit >= 1:
-                    self.goodsNo = goods['goodsNo']
-                    print(f'当前选择券号：{self.goodsNo}')
-                    self.get_coupom()
+            for goodsList in response["obj"]:
+                breakFlag = True
+                for goods in goodsList["goodsList"]:
+                    exchangeTimesLimit = goods['exchangeTimesLimit']
+                    if exchangeTimesLimit >= 1:
+                        self.goodsNo = goods['goodsNo']
+                        print(f'领取生活权益：当前选择券号：{self.goodsNo}')
+                        breakFlag = self.get_coupom()
+                        break
+                if not breakFlag:
+                    print(f'>领券失败！继续下一个！')
                     break
         else:
             print(f'>领券失败！原因：{response.get("errorMessage")}')
@@ -1954,10 +1964,10 @@ class RUN:
         self.get_SignTaskList()
         self.get_SignTaskList(True)
 
-        # 执行丰蜜任务
-        self.honey_indexData()
         # 获取任务列表并执行任务
         self.get_honeyTaskListStart()
+        # 执行丰蜜任务
+        self.honey_indexData()
         self.honey_indexData(True)
 
         #######################################
