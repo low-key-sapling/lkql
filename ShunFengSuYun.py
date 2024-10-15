@@ -7,7 +7,7 @@ https://mcs-mimp-web.sf-express.com/mcs-mimp/share/weChat/shareGiftReceiveRedire
 https://mcs-mimp-web.sf-express.com/mcs-mimp/share/app/shareRedirect
 每天跑一到两次就行
 """
-# cron: 11 15,18 * * *
+# cron: 11 8 * * *
 # const $ = new Env("顺丰速运-PY");
 import hashlib
 import json
