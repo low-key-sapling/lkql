@@ -347,9 +347,10 @@ class RUN:
                         print(f'领取生活权益：当前选择券号：{self.goodsNo}')
                         breakFlag = self.get_coupom()
                         break
-                if not breakFlag:
-                    print(f'>领券失败！继续下一个！')
+                if breakFlag:
                     break
+                else:
+                    print(f'>领券失败！继续下一个！')
         else:
             print(f'>领券失败！原因：{response.get("errorMessage")}')
 
