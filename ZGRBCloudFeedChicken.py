@@ -5,7 +5,7 @@ Follow By: https://github.com/xiaobu689/HhhhScripts/blob/main/scripts/%E4%B8%AD%
 
 变量名: ZGRBYJ
 cron: 0 7,12,23,0 * * *
-const $ = new Env("中国人保-养鸡");
+const $ = new Env("中国人保-云养鸡");
 """
 import os
 import random
@@ -397,10 +397,13 @@ class RUN():
             time.sleep(random.randint(5, 10))
 
             # 使用道具
-            self.v2UseCarNo2()
-            time.sleep(random.randint(2, 5))
-            self.v2UseCarNo3()
-            time.sleep(random.randint(2, 5))
+            if(isFisrtSignIn):
+                self.v2UseCarNo2()
+                time.sleep(random.randint(2, 5))
+                self.v2UseCarNo3()
+                time.sleep(random.randint(2, 5))
+            else:
+                print(f'⛔️今天已经使用过道具啦,明天再来呀')
 
             # 卖鸡蛋
             self.chicken_sell_egg_all()
