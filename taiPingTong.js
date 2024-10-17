@@ -15,6 +15,7 @@ export tptCookie="eyJ0xxxxxxxxxxxxxxxxxx#18f5609fe20-xxxxxxxx-xxxxx-xxxxx"
 
 cron: 17 7,18 * * *
 */
+const {Env} = require("./common.js");
 const $ = new Env("太平通");
 
 const _0x433672 = _0x52b7;
