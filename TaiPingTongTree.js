@@ -36,6 +36,7 @@ async function main() {
             console.log(`任务：${task.title} id：${task.id} can_do: ${task.can_do}`);
             if (!task.can_do){
                 console.log("任务已完成或者任务状态不可用")
+                continue
             }
             //初次种植
             if (task.id == 1) {
