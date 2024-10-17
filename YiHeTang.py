@@ -69,6 +69,8 @@ def user_help(ck,helpUserId):
 
     if(result[code] == 'ok'):
         myprint(f"助力成功,uid={helpUserId}")
+    else:
+        myprint(result)
 
 
 def rhq(ck):
@@ -114,13 +116,13 @@ def main():
             myprint('----------------------')
             z = z + 1
         except Exception as e:
-            print('未知错误')
+            print('未知错误'+e)
 
 if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        print('未知错误')
+        print('未知错误'+e)
     try:
         send_notification_message(title='益禾堂')  # 发送通知
     except Exception as e:
