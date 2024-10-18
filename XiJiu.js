@@ -130,7 +130,8 @@ async function main() {
         let getMemberInfo = await commonGet("/garden/Gardenmemberinfo/getMemberInfo");
         console.log(`拥有：高粱*${getMemberInfo.data.sorghum} 小麦*${getMemberInfo.data.wheat} 酒曲*${getMemberInfo.data.wine_yeast} 酒*${getMemberInfo.data.wine} 水*${getMemberInfo.data.water} 肥料*${getMemberInfo.data.manure}`)
         let lands = await commonGet("/garden/sorghum/index");
-        let unLock = true
+        //true为执行解锁土地，false为不执行解锁土地
+        let unLock = false
         for (let land of lands.data) {
             if (land.status == -1) {
                 console.log(`第${land.serial_number}块地：未解锁`)
