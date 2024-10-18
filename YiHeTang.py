@@ -67,8 +67,8 @@ def user_help(ck,helpUserId):
 
     result = requests.post(url='https://webapi.qmai.cn/web/cmk-center/task/userHelp',data=data,headers=headers).json()
 
-    if(result[code] == 'ok'):
-        myprint(f"助力成功,uid={helpUserId}")
+    if(result['code'] == 0):
+        myprint(f"助力成功,uid={helpUserId},message={result['message']}")
     else:
         myprint(result)
 
