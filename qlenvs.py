@@ -190,9 +190,9 @@ class QL:
 if __name__ == "__main__":
 
     print(f"测试青龙环境变量API开始")
-    ql = QL()
-    result = ql.get_by_name("JD_COOKIE");
-    print(f"{result}")
+    #ql = QL()
+    #result = ql.get_by_name("JD_COOKIE");
+    #print(f"{result}")
     print(f"测试青龙环境变量API完成")
     #print(f"测试青龙环境变量是否首次进入API开始")
     #isFisrtSignIn = ql.isFisrtSignIn('test_sign');
