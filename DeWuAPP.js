@@ -584,7 +584,7 @@ class Task {
         try {
             let RequestBody = { taskId: body.taskId, taskType: body.taskType }
 
-            let result = await this.taskRequest("post", `https://app.dewu.com/hacking-game-center/v1/sign/task_receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
+            let result = await this.taskRequestReceive("post", `https://app.dewu.com/hacking-game-center/v1/sign/task_receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
                 $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.amount}]金币🎉`)
@@ -600,7 +600,7 @@ class Task {
     async TaskReceiveBuZhou(body) {
         try {
             let RequestBody = { taskId: body.taskId, classify: body.classify }
-            let result = await this.taskRequest("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/task-receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
+            let result = await this.taskRequestReceive("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/task-receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
                 $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.count}]次数🎉`)
@@ -907,7 +907,7 @@ class Task {
     }
     async TaskReceiveFish(body) {
         try {
-            let result = await this.taskRequest("post", `https://app.dewu.com/hacking-fish/v1/task/receive?sign=ee632e4b8e24d2526737bca0b7c0c678`, { taskId: body.taskId, classify: body.classify })
+            let result = await this.taskRequestReceive("post", `https://app.dewu.com/hacking-fish/v1/task/receive?sign=ee632e4b8e24d2526737bca0b7c0c678`, { taskId: body.taskId, classify: body.classify })
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
                 $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.num}g]💧🎉`)
@@ -923,7 +923,7 @@ class Task {
     }
     async TaskReceiveTree(body) {
         try {
-            let result = await this.taskRequest("post", `https://app.dewu.com/hacking-tree/v1/task/receive?sign=15c051cc7af50c30318c05b539e434e7`, { taskId: body.taskId, classify: body.classify })
+            let result = await this.taskRequestReceive("post", `https://app.dewu.com/hacking-tree/v1/task/receive?sign=15c051cc7af50c30318c05b539e434e7`, { taskId: body.taskId, classify: body.classify })
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
                 $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.num}g]💧🎉`)
@@ -1154,7 +1154,8 @@ class Task {
     randomNumber(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
-    async taskRequest(method, url, body = {}) {
+
+    async taskRequestReceive(method, url, body = {}) {
         //
 
         let headers = {
@@ -1174,6 +1175,49 @@ class Task {
             "traceparent": this.generateIds(),
             "sks": "1,hdw3",
             "Cookie": "duToken=" + this.duToken
+        }
+        const reqeuestOptions = {
+            url: url,
+            method: method,
+            headers: headers
+
+        }
+        //console.log(body);
+        let { enData, n } = this.createEncryptedBody(JSON.stringify(body))
+        reqeuestOptions.headers["a"] = n
+        //console.log(enData);
+        method == "get" ? (reqeuestOptions.url.split("?")[1] != undefined ? reqeuestOptions.url += "&data=" + encodeURIComponent(enData.data) : reqeuestOptions.url += "?data=" + encodeURIComponent(enData.data)) : Object.assign(reqeuestOptions, { body: JSON.stringify({ data: enData.data }) })
+        //console.log(reqeuestOptions)
+        try {
+            let { body: result } = await $.httpRequest(reqeuestOptions)
+            if (!$.isJson(result)) {
+                result = JSON.parse(this.decryptResponseBody(result, n))
+            }
+            //console.log(result);
+            return result
+
+        } catch (error) {
+            //console.log(error);
+            // $.log(`接口请求失败 `)
+            return { code: 0, msg: "接口请求失败" }
+        }
+
+    }
+
+    async taskRequest(method, url, body = {}) {
+        //
+
+        let headers = {
+            Host: 'app.dewu.com',
+            'x-auth-token': "Bearer " + this.ck,
+            'ua': 'duapp/5.4.5(android;10)',
+            'deviceTrait': 'MI+8+Lite',
+            'channel': 'xiaomi',
+            'SK': this.sk,
+            'shumeiId': this.shumeiId,
+            'uuid': this.uuid,
+            'deviceId': this.deviceId,
+            'User-Agent': this.ua
         }
         const reqeuestOptions = {
             url: url,
