@@ -1167,7 +1167,13 @@ class Task {
             'shumeiId': this.shumeiId,
             'uuid': this.uuid,
             'deviceId': this.deviceId,
-            'User-Agent': this.ua
+            'User-Agent': this.ua,
+
+            "duToken": "" + this.duToken,
+            "cookieToken": "" + this.duToken,
+            "traceparent": this.generateIds(),
+            "sks": "1,hdw3",
+            "Cookie": "duToken=" + this.duToken
         }
         const reqeuestOptions = {
             url: url,
