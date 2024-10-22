@@ -2,7 +2,7 @@
 /**
  * Follow By: https://github.com/IGuanggg/yanmaomao/blob/83573cf1bc5ed29d4ad9b74d5df2485e4cd362f4/%E6%9F%90%E7%89%A9.js
  * 得物农场
- * cron 10 8,12,18,22 * * *  DeWuFarm.js
+ * cron 10 9,12,18,22 * * *  DeWuFarm.js
  * scriptVersionNow = "0.0.1"
  * 浇水 签到 领取水滴 气泡水滴
  * 四个参数缺一不可
