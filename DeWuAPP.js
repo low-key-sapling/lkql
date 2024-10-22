@@ -1,6 +1,6 @@
 /**
  * Follow By: https://github.com/3288588344/toulu/blob/ae7a4584b59826f4ba6bd78ab651b8fae2034631/%E5%BE%97%E6%97%A0%E5%BC%80%E6%BA%90.js
- * cron 10 11 * * * DeWuAPP.js
+ * cron 10 9 * * * DeWuAPP.js
  * 依赖 crypto-js & jsencrypt
  * 得物APP 探索中的玩一玩 所有游戏的入口都在那里  请跑任务之前手动玩一次
  * --------------------------------------------------
