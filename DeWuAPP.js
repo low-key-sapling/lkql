@@ -153,6 +153,9 @@ class Task {
         this.stationList = [];
         this.duToken = str.split(strSplitor)[1];
         this.sk = str.split(strSplitor)[2];
+        this.shumeiId = str.split(strSplitor)[3];
+        this.uuid = str.split(strSplitor)[4];
+        this.deviceId = str.split(strSplitor)[4];
         this.prizeLocations = []
         this.BuZhouRefreshStatus = false
         this.chanceCount = 0
@@ -1155,22 +1158,16 @@ class Task {
         //
 
         let headers = {
-            "Host": "app.dewu.com",
-
-            "SK": this.sk,
-
-            "x-auth-token": "Bearer " + this.ck,
-
-            "duToken": "" + this.duToken,
-
-            "cookieToken": "" + this.duToken,
-            "traceparent": this.generateIds(),
-            "User-Agent": this.ua,
-
-            "sks": "1,hdw3",
-
-
-            "Cookie": "duToken=" + this.duToken
+            Host: 'app.dewu.com',
+            'x-auth-token': "Bearer " + this.ck,
+            'ua': 'duapp/5.4.5(android;10)',
+            'deviceTrait': 'MI+8+Lite',
+            'channel': 'xiaomi',
+            'SK': this.sk,
+            'shumeiId': this.shumeiId,
+            'uuid': this.uuid,
+            'deviceId': this.deviceId,
+            'User-Agent': this.ua
         }
         const reqeuestOptions = {
             url: url,
@@ -1237,40 +1234,17 @@ class Task {
 
 
         let headers = {
-            "Host": "app.dewu.com",
-            "Connection": "keep-alive",
-            //"Content-Length": "62",
-            //"ua": "duapp/5.37.0(android;10)",
-            //"Origin": "https://cdn-m.dewu.com",
-            //"appid": "h5",
-            "SK": this.sk,
-            /*"shumeiId": "20240229101108a9d7deaedd9e5e305209da327c58c8fc21a0fe159c45b78d",*/
-            /*"deviceTrait": "MI+8+Lite",*/
-            "x-auth-token": "Bearer " + this.ck,
-            /*"Sec-Fetch-Dest": "empty",
-            "channel": "xiaomi",
-            "duToken": "d41d8cd9|1630362958|1711360875|4bf085e789d085b0",
-            "appVersion": "5.37.0",
-            "emu": "0",*/
-            //"cookieToken": "d41d8cd9|1630362958|1711360875|4bf085e789d085b0",
-            "traceparent": this.generateIds(),
-            /*"dudeliveryid": "79F073E7555D2BD9490AF2270549ADBABDFE24914A4EEF24D4D5C25559243BDD",*/
-            "User-Agent": this.ua,
-            //"duproductid": "0BC86B71CB9BA08726EDD70256925177BDFE24914A4EEF24D4D5C25559243BDD",
             "Content-Type": "application/json",
-            /*"isRoot": "0",
-            "imei": "",
-            "duid": "0BC86B71CB9BA08726EDD70256925177BDFE24914A4EEF24D4D5C25559243BDD",
-            "platform": "h5",
-            "isProxy": "0",
-            */
-            /*"X-Requested-With": "com.shizhuang.duapp",
-            "Sec-Fetch-Site": "same-site",
-            "Sec-Fetch-Mode": "cors",
-            "Referer": "https://cdn-m.dewu.com/h5-growth/game-task?gameTaskFlag=true&taskId=Nr52k&taskType=50&countdownIcon=%7B%22countdownIcon%22%3A%22https%3A%2F%2Fcdn.poizon.com%2Fnode-common%2F28c7b3d4060e086551dcc84eca7bfbeb.png%22%2C%22hideCountdownIcon%22%3A%22https%3A%2F%2Fcdn.poizon.com%2Fnode-common%2Fa8b472c7622a53454d82745345cefa71.png%22%2C%22coordinate%22%3A%2212%2C600%22%7D&scrollbarColor=%2301C1C2&fontColor=%23FFFFFF&btd=83500&goodsCollect=goodsDetail&popId=0",
-            "Accept-Encoding": "gzip, deflate",
-            "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",*/
-            "Cookie": `duToken=${this.duToken};`
+            "Host": 'app.dewu.com',
+            'x-auth-token': "Bearer " + this.ck,
+            'ua': 'duapp/5.4.5(android;10)',
+            'deviceTrait': 'MI+8+Lite',
+            'channel': 'xiaomi',
+            'SK': this.sk,
+            'shumeiId': this.shumeiId,
+            'uuid': this.uuid,
+            'deviceId': this.deviceId,
+            'User-Agent': this.ua
         }
         const reqeuestOptions = {
             url: url,
