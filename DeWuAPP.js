@@ -388,7 +388,7 @@ class Task {
     async zeroLotteryWinList() {
         let body = { "limit": 10, "lastId": 0 }
         try {
-            let result = await this.taskRequest_task2("post", `https://app.dewu.com/hacking-zero-lottery/v1/activity/engage-in-list`, body)
+            let result = await this.taskRequest_task3("post", `https://app.dewu.com/hacking-zero-lottery/v1/activity/engage-in-list`, body)
             if (result.code == 200) {
                 if (result.data?.list) {
                     for (let i of result.data.list) {
@@ -411,7 +411,7 @@ class Task {
     async zeroLotteryList() {
         let body = { "source": "wotab" }
         try {
-            let result = await this.taskRequest_task2("post", `https://app.dewu.com/api/v1/h5/zero-lottery-interfaces/zl/activity/query-today?sign=${this.calculateSign(body)}`, body)
+            let result = await this.taskRequest_task3("post", `https://app.dewu.com/api/v1/h5/oss-platform/hacking-zero-lottery/v1/activity/query-today?sign=${this.calculateSign(body)}`, body)
             if (result.code == 200) {
                 for (let i of result.data.activityList) {
                     let taskStatus = false
@@ -426,13 +426,14 @@ class Task {
                 }
             } else {
                 $.log(`❌账号[${this.index}] 获取0元购列表失败[${result.msg}]🎉`)
-                //console.log(result);
+                $.log(`❌账号[${this.index}] 获取0元购列表失败结果[${JSON.stringify(result)}]🎉`)
             }
         } catch (e) {
             console.log(e);
         }
     }
     async StationEgnageIn(id) {
+        $.log(`账号[${this.index} id[${id}] 开始参与上上签🎉`)
         let body = { "id": id }
         try {
             let result = await this.taskRequest_task("post", `https://app.dewu.com/api/v1/h5/delicate-sell-interfaces/dsell/station/egnage-in?sign=${this.calculateSign(body)}`, body)
@@ -440,7 +441,7 @@ class Task {
                 $.log(`账号[${this.index}] 参与上上签成功🎉`)
             } else {
                 $.log(`❌账号[${this.index}] 参与上上签失败[${result.msg}]`);
-                //console.log(result);
+                $.log(`❌账号[${this.index}] 参与上上签失败结果[${JSON.stringify(result)}]`);
             }
         } catch (e) {
             console.log(e);
@@ -456,6 +457,7 @@ class Task {
                         this.stationList.push(i)
                     }
                 }
+                $.log(`账号[${this.index}] 获取上上签列表[${result.msg}]🎉`);
             } else {
                 $.log(`❌账号[${this.index}] 获取上上签列表失败[${result.msg}]🎉`);
                 //console.log(result);
@@ -499,10 +501,6 @@ class Task {
                     await $.wait(2500)
                     await this.BuZhouRefresh(result.data.seasonId)
                 }
-
-
-
-
             } else {
                 $.log(`❌账号[${this.index}] 盲盒获取失败[${result.msg}]`);
                 //console.log(result);
@@ -512,30 +510,32 @@ class Task {
         }
     }
     async BuZhouLottery(seasonId, prizeLocation) {
-        let body = { "benefitId": 1, "seasonId": seasonId, "prizeLocation": prizeLocation, "source": "gamecentertask" }
+        let body = {"benefitId":1,"seasonId":seasonId,"prizeLocation":prizeLocation,"source":"gamecentertask"}
         try {
             let result = await this.taskRequest_task2("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/lottery?sign=${this.calculateSign(body)}`, body)
             if (result.code == 200) {
-                $.log(`账号[${this.index}] 盲盒抽取[${result.data.gkLotteryVo.gkName}]碎片`);
+                $.log(`账号[${this.index}] 盲盒抽取[${result.msg}] 盲盒抽取结果[${result.data.gkLotteryVo.gkName}]碎片`);
             } else {
                 $.log(`❌账号[${this.index}] 盲盒抽取失败[${result.msg}]`);
-                //console.log(seasonId, prizeLocation);
+                $.log(`❌账号[${this.index}] 盲盒抽取失败结果[${JSON.stringify(result)}]`);
             }
         } catch (e) {
             console.log(e);
         }
     }
+
     async BuZhouRefresh(seasonId) {
+        //$.log(`账号[${this.index}] 刷新盲盒 seasonId[${seasonId}]`);
         let body = { "seasonId": seasonId }
         try {
-            let result = await this.taskRequest_task3("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/refresh?sign=${this.calculateSign(body)}`, body)
+            let result = await this.taskRequest_task2("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/refresh?sign=${this.calculateSign(body)}`, body)
             if (result.code == 200) {
-                $.log(`账号[${this.index}] 刷新盲盒成功`);
+                $.log(`账号[${this.index}] 刷新盲盒[${result.msg}]`);
                 this.BuZhouRefreshStatus = true;
                 this.prizeLocations = []
             } else {
                 $.log(`❌账号[${this.index}] 刷新盲盒失败[${result.msg}]`);
-                //console.log(result);
+                $.log(`❌账号[${this.index}] 刷新盲盒失败结果[${JSON.stringify(result)}]`);
                 this.BuZhouRefreshStatus = false;
             }
         } catch (e) {
@@ -1035,7 +1035,8 @@ class Task {
                 let helpCodeResult = await this.taskRequest("post", "https://app.dewu.com/hacking-tree/v1/keyword/gen?sign=fe26befc49444d362c8f17463630bdba", {})
                 if (helpCodeResult.code == 200) {
                     let kw = helpCodeResult.data.keyword
-                    helpCode = kw.split("œ")[1]
+                    helpCode = kw.split("å")[1]
+                    //[{"code":200,"status":200,"msg":"成功","data":{"keyword":" 5 CZ0001 å😼👽🌱🙀🌹🙀🌱å ","keywordDesc":"彳㝵牜勿送你星愿树，最快浇水20天免费领潮物！\nhttps://dw4.co/t/A/1qmmlw5MB","rewardDesc":"送你星愿树，最快浇水20天免费领潮物","appFlag":"彳㝵牜勿","isShowToast":false},"timestamp":1729671761574,"traceId":"0aec15ac6718b25198e5ae57538f186b"}]
                     $.log(`首账号助力码[${helpCode}]`)
                 }
             } else {
@@ -1359,11 +1360,9 @@ class Task {
             let { body: result } = await $.httpRequest(reqeuestOptions)
             return result
         } catch (error) {
-            $.log(`taskRequest_task2接口请求失败结果为: ${error} `)
+            $.log(`taskRequest_task3接口请求失败结果为: ${error} `)
             return { code: 0, msg: "接口请求失败" }
         }
-        //
-
     }
 
     async taskRequest_task2(method, url, body = "") {
@@ -1377,7 +1376,7 @@ class Task {
             //"Origin": "https://cdn-m.dewu.com",
             //"appid": "h5",
             "SK": this.sk,
-            /*"shumeiId": "20240229101108a9d7deaedd9e5e305209da327c58c8fc21a0fe159c45b78d",*/
+            'shumeiId': this.shumeiId,
             /*"deviceTrait": "MI+8+Lite",*/
             "x-auth-token": "Bearer " + this.ck,
             /*"Sec-Fetch-Dest": "empty",
@@ -1390,7 +1389,7 @@ class Task {
             /*"dudeliveryid": "79F073E7555D2BD9490AF2270549ADBABDFE24914A4EEF24D4D5C25559243BDD",*/
             "User-Agent": this.ua,
             //"duproductid": "0BC86B71CB9BA08726EDD70256925177BDFE24914A4EEF24D4D5C25559243BDD",
-            "Content-Type": "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
             /*"isRoot": "0",
             "imei": "",
             "duid": "0BC86B71CB9BA08726EDD70256925177BDFE24914A4EEF24D4D5C25559243BDD",
