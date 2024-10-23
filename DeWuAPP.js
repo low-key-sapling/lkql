@@ -631,9 +631,9 @@ class Task {
     }
     async Dowater() {
         if (this.droplet > 0) {
-            $.log(`账号[${this.index}]  可浇水${parseInt(this.droplet / 60)}次,开始浇水`);
+            $.log(`账号[${this.index}]  可浇水${parseInt(this.droplet / 42)}次,开始浇水`);
             if (this.treeMode == 0) {
-                for (let i = 0; i < parseInt(this.droplet / 60); i++) {
+                for (let i = 0; i < parseInt(this.droplet / 42); i++) {
                     if (this.doWaterStatus) {
                         await this.DoWaterApi()
                         //随机延迟random
