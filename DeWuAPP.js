@@ -20,7 +20,7 @@ let ckName = "dewuCK";//CK变量名字
 
 
 const version = "testV1"
-const isPromiseAll = process.env["isPromiseAll"] ? process.env["isPromiseAll"] : "true";//是否开启并发
+const isPromiseAll = process.env["isPromiseAll"] ? process.env["isPromiseAll"] : "true";//是否开启并发,默认开启
 let UAdefult = "Mozilla/5.0 (Linux; Android 10; MI 8 Lite Build/QKQ1.190910.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.99 Mobile Safari/537.36/duapp/5.39.1(android;10)"
 let UA = process.env["UAdefult_dewu"] ? process.env["UAdefult_dewu"] : UAdefult
 let SK = process.env["SKdefult_dewu"] ? process.env["SKdefult_dewu"] : ""
@@ -388,7 +388,7 @@ class Task {
     async zeroLotteryWinList() {
         let body = { "limit": 10, "lastId": 0 }
         try {
-            let result = await this.taskRequest_task("post", `https://app.dewu.com/hacking-zero-lottery/v1/activity/engage-in-list`, body)
+            let result = await this.taskRequest_task2("post", `https://app.dewu.com/hacking-zero-lottery/v1/activity/engage-in-list`, body)
             if (result.code == 200) {
                 if (result.data?.list) {
                     for (let i of result.data.list) {
@@ -411,7 +411,7 @@ class Task {
     async zeroLotteryList() {
         let body = { "source": "wotab" }
         try {
-            let result = await this.taskRequest_task("post", `https://app.dewu.com/api/v1/h5/zero-lottery-interfaces/zl/activity/query-today?sign=${this.calculateSign(body)}`, body)
+            let result = await this.taskRequest_task2("post", `https://app.dewu.com/api/v1/h5/zero-lottery-interfaces/zl/activity/query-today?sign=${this.calculateSign(body)}`, body)
             if (result.code == 200) {
                 for (let i of result.data.activityList) {
                     let taskStatus = false
@@ -467,7 +467,7 @@ class Task {
     async BuZhouInfo() {
         let body = { "benefitId": 1, "additionPresent": 0, "source": "gamecentertask" }
         try {
-            let result = await this.taskRequest_task("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/index?sign=${this.calculateSign(body)}`, body)
+            let result = await this.taskRequest_task2("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/index?sign=${this.calculateSign(body)}`, body)
             if (result.code == 200) {
                 //console.log(result.data);
                 $.log(`账号[${this.index}] 盲盒赛季[${result.data.seasonName}] 当前抽奖机会[${result.data.chanceCount}] 🎉`)
@@ -514,7 +514,7 @@ class Task {
     async BuZhouLottery(seasonId, prizeLocation) {
         let body = { "benefitId": 1, "seasonId": seasonId, "prizeLocation": prizeLocation, "source": "gamecentertask" }
         try {
-            let result = await this.taskRequest_task("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/lottery?sign=${this.calculateSign(body)}`, body)
+            let result = await this.taskRequest_task2("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/lottery?sign=${this.calculateSign(body)}`, body)
             if (result.code == 200) {
                 $.log(`账号[${this.index}] 盲盒抽取[${result.data.gkLotteryVo.gkName}]碎片`);
             } else {
@@ -528,7 +528,7 @@ class Task {
     async BuZhouRefresh(seasonId) {
         let body = { "seasonId": seasonId }
         try {
-            let result = await this.taskRequest_task("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/refresh?sign=${this.calculateSign(body)}`, body)
+            let result = await this.taskRequest_task3("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/refresh?sign=${this.calculateSign(body)}`, body)
             if (result.code == 200) {
                 $.log(`账号[${this.index}] 刷新盲盒成功`);
                 this.BuZhouRefreshStatus = true;
@@ -545,7 +545,7 @@ class Task {
     async BuZhouTaskList() {
         let body = { "source": "gamecentertask" }
         try {
-            let result = await this.taskRequest_task("get", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/task-list?source=gamecentertask&sign=${this.calculateSign(body)}`)
+            let result = await this.taskRequest_task2("get", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/task-list?source=gamecentertask&sign=${this.calculateSign(body)}`)
             if (result.code == 200) {
                 for (let i of result.data.taskVoList) {
                     let taskStatus = false
@@ -584,13 +584,13 @@ class Task {
         try {
             let RequestBody = { taskId: body.taskId, taskType: body.taskType }
 
-            let result = await this.taskRequestReceive("post", `https://app.dewu.com/hacking-game-center/v1/sign/task_receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
+            let result = await this.taskRequestOriginal("post", `https://app.dewu.com/hacking-game-center/v1/sign/task_receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
-                $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.amount}]金币🎉`)
+                $.log(`账号[${this.index}]  领取潮金币任务奖励[${result.msg}] --- [${result.data.amount}]金币🎉`)
             } else {
                 //console.log(body.taskId);
-                $.log(`❌账号[${this.index}]  领取任务奖励失败[${result.msg}]`);
+                $.log(`❌账号[${this.index}]  领取潮金币任务奖励失败[${result.msg}]`);
                 //console.log(result);
             }
         } catch (e) {
@@ -600,13 +600,13 @@ class Task {
     async TaskReceiveBuZhou(body) {
         try {
             let RequestBody = { taskId: body.taskId, classify: body.classify }
-            let result = await this.taskRequestReceive("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/task-receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
+            let result = await this.taskRequestOriginal("post", `https://app.dewu.com/api/v1/h5/mount-buzhou-interfaces/gk/task-receive?sign=${this.calculateSign(RequestBody)}`, RequestBody)
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
-                $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.count}]次数🎉`)
+                $.log(`账号[${this.index}]  领取盲盒任务奖励[${result.msg}] --- [${result.data.count}]次数🎉`)
             } else {
                 //console.log(body.taskId);
-                $.log(`❌账号[${this.index}]  领取任务奖励失败[${result.msg}]`);
+                $.log(`❌账号[${this.index}]  领取任盲盒务奖励失败[${result.msg}]`);
                 //console.log(result);
             }
         } catch (e) {
@@ -616,7 +616,7 @@ class Task {
     async FishFeed() {
         let body = { "feedTimes": 1, "fishId": this.fishId, "fishType": this.fishType }
         try {
-            let result = await this.taskRequest("post", `https://app.dewu.com/hacking-fish/v1/fish/feed?sign=63a26f09f6d985b73299f92506f6e986`, body)
+            let result = await this.taskRequestReceive("post", `https://app.dewu.com/hacking-fish/v1/fish/feed?sign=63a26f09f6d985b73299f92506f6e986`, body)
             if (result.code == 200) {
                 $.log(`账号[${this.index}] 喂食🐟成功🎉`)
                 this.fishFeedStatus = true
@@ -631,9 +631,9 @@ class Task {
     }
     async Dowater() {
         if (this.droplet > 0) {
-            $.log(`账号[${this.index}]  可浇水${parseInt(this.droplet / 100)}次,开始浇水`);
+            $.log(`账号[${this.index}]  可浇水${parseInt(this.droplet / 60)}次,开始浇水`);
             if (this.treeMode == 0) {
-                for (let i = 0; i < parseInt(this.droplet / 100); i++) {
+                for (let i = 0; i < parseInt(this.droplet / 60); i++) {
                     if (this.doWaterStatus) {
                         await this.DoWaterApi()
                         //随机延迟random
@@ -771,6 +771,7 @@ class Task {
                 $.log(`账号[${this.index}]  今日${result.data.status == 1 ? "未签到" : "已签到"}🎉`)
                 if (result.data.status == 1) {
                     let SignInResult = await this.taskRequest("post", `https://app.dewu.com/hacking-tree/v1/sign/sign_in`, {})
+                    //$.log(`账号[${this.index}]  签到领取水滴结果[${JSON.stringify(SignInResult)}]🎉`)
                     if (SignInResult.code == 200) {
                         $.log(`账号[${this.index}]  签到领取水滴[${SignInResult.msg}] --- [${SignInResult.data.Num}]🎉`)
                     } else {
@@ -788,20 +789,21 @@ class Task {
     async SignListFish() {
         try {
             let result = await this.taskRequest_task("get", `https://app.dewu.com/hacking-fish/v1/daily_sign/list`)
-            //console.log(JSON.stringify(result));
+
             if (result.code == 200) {
                 $.log(`账号[${this.index}]  今日${result.data.status == 1 ? "未签到" : "已签到"}🎉`)
                 if (result.data.status == 1) {
                     let SignInResult = await this.taskRequest("post", `https://app.dewu.com/hacking-fish/v1/daily_sign/receive`, {})
+                    //$.log(`账号[${this.index}]  签到领取鱼食结果[${JSON.stringify(SignInResult)}]🎉`)
                     if (SignInResult.code == 200) {
-                        $.log(`账号[${this.index}]  签到领取鱼食[${SignInResult.msg}] --- [${SignInResult.data.Num}]🎉`)
+                        $.log(`账号[${this.index}]  签到领取鱼食[${SignInResult.msg}] --- [${SignInResult.data.reward}]🎉`)
                     } else {
                         $.log(`账号[${this.index}]  签到领取鱼食[${SignInResult.msg}]`)
                     }
                 }
             } else {
                 $.log(`❌账号[${this.index}]  获取签到列表失败[${result.msg}]`);
-                //console.log(result);
+                $.log(`❌账号[${this.index}]  获取签到列表结果[${JSON.stringify(result)}]🎉`)
             }
         } catch (e) {
             console.log(e);
@@ -857,7 +859,7 @@ class Task {
     }
     async PonitSignIn() {
         try {
-            let result = await this.taskRequest("post", `https://app.dewu.com/hacking-game-center/v1/sign/sign`, {})
+            let result = await this.taskRequestOriginal("post", `https://app.dewu.com/hacking-game-center/v1/sign/sign`, {})
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
                 $.log(`账号[${this.index}]  外部活动潮币签到成功 获得[${result.data.coins}g💧]🎉`)
@@ -880,9 +882,11 @@ class Task {
                 if (receiveResult.code == 200) {
                     $.log(`账号[${this.index}]  领取气泡水滴[${receiveResult.msg}] --- [${receiveResult.data.totalDroplet}g]💧🎉`)
                 } else {
-                    $.log(`❌账号[${this.index}]  领取气泡失败[${receiveResult.msg}]`);
-                    //console.log(result);
+                    $.log(`❌账号[${this.index}]  领取气泡水滴失败[${receiveResult.msg}]`);
+                    $.log(`❌账号[${this.index}]  领取气泡水滴结果[${receiveResult}]`);
                 }
+            } else if (result.data.dailyExtra) {
+                $.log(`❌账号[${this.index}]  气泡水滴未满,不可领取,明日再来领取吧！目前已经积攒了 --- [${result.data.dailyExtra.totalDroplet}]g水滴呢!"`);
             } else {
                 $.log(`❌账号[${this.index}]  气泡水滴获取失败[${result.msg}]`);
                 //console.log(result);
@@ -910,10 +914,10 @@ class Task {
             let result = await this.taskRequestReceive("post", `https://app.dewu.com/hacking-fish/v1/task/receive?sign=ee632e4b8e24d2526737bca0b7c0c678`, { taskId: body.taskId, classify: body.classify })
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
-                $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.num}g]💧🎉`)
+                $.log(`账号[${this.index}]  领取鱼厂任务奖励[${result.msg}] --- [${result.data.num}g]💧🎉`)
 
             } else {
-                $.log(`❌账号[${this.index}]  领取任务奖励失败[${result.msg}]`);
+                $.log(`❌账号[${this.index}]  领取鱼厂任务奖励失败[${result.msg}]`);
                 //console.log(body.taskId);
                 //console.log(result);
             }
@@ -926,10 +930,10 @@ class Task {
             let result = await this.taskRequestReceive("post", `https://app.dewu.com/hacking-tree/v1/task/receive?sign=15c051cc7af50c30318c05b539e434e7`, { taskId: body.taskId, classify: body.classify })
             //console.log(JSON.stringify(result));
             if (result.code == 200) {
-                $.log(`账号[${this.index}]  领取任务奖励[${result.msg}] --- [${result.data.num}g]💧🎉`)
+                $.log(`账号[${this.index}]  领取水滴任务奖励[${result.msg}] --- [${result.data.num}g]💧🎉`)
             } else {
                 //console.log(body.taskId);
-                $.log(`❌账号[${this.index}]  领取任务奖励失败[${result.msg}]`);
+                $.log(`❌账号[${this.index}]  领取水滴任务奖励失败[${result.msg}]`);
                 //console.log(result);
             }
         } catch (e) {
@@ -1120,8 +1124,8 @@ class Task {
                 }
                 $.log(`账号[${this.index}]  [${fishName}]等级[${lv}] [${progress}/1000000]  剩余※鱼食🐟[${result.data.balance}g]🎉`)
                 if (result.data.balance > 0) {
-                    $.log(`账号[${this.index}]  喂食🐟${parseInt(result.data.balance / 10)}次,开始喂食`);
-                    for (let i = 0; i < parseInt(result.data.balance / 10); i++) {
+                    $.log(`账号[${this.index}]  喂食🐟${parseInt(result.data.balance / 12)}次,开始喂食`);
+                    for (let i = 0; i < parseInt(result.data.balance / 12); i++) {
                         if (this.fishFeedStatus) {
                             await this.FishFeed()
                             //随机延迟random
@@ -1153,6 +1157,54 @@ class Task {
     //randominit
     randomNumber(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    async taskRequestOriginal(method, url, body = {}) {
+        //
+
+        let headers = {
+            "Host": "app.dewu.com",
+
+            "SK": this.sk,
+
+            "x-auth-token": "Bearer " + this.ck,
+
+            "duToken": "" + this.duToken,
+
+            "cookieToken": "" + this.duToken,
+            "traceparent": this.generateIds(),
+            "User-Agent": this.ua,
+
+            "sks": "1,hdw3",
+
+
+            "Cookie": "duToken=" + this.duToken
+        }
+        const reqeuestOptions = {
+            url: url,
+            method: method,
+            headers: headers
+
+        }
+        //console.log(body);
+        let { enData, n } = this.createEncryptedBody(JSON.stringify(body))
+        reqeuestOptions.headers["a"] = n
+        //console.log(enData);
+        method == "get" ? (reqeuestOptions.url.split("?")[1] != undefined ? reqeuestOptions.url += "&data=" + encodeURIComponent(enData.data) : reqeuestOptions.url += "?data=" + encodeURIComponent(enData.data)) : Object.assign(reqeuestOptions, { body: JSON.stringify({ data: enData.data }) })
+        //console.log(reqeuestOptions)
+        try {
+            let { body: result } = await $.httpRequest(reqeuestOptions)
+            if (!$.isJson(result)) {
+                result = JSON.parse(this.decryptResponseBody(result, n))
+            }
+            //console.log(result);
+            return result
+
+        } catch (error) {
+            $.log(`taskRequestReceive接口请求失败结果为: ${error} `)
+            return { code: 0, msg: "接口请求失败" }
+        }
+
     }
 
     async taskRequestReceive(method, url, body = {}) {
@@ -1197,8 +1249,7 @@ class Task {
             return result
 
         } catch (error) {
-            //console.log(error);
-            // $.log(`接口请求失败 `)
+            $.log(`taskRequestReceive接口请求失败结果为: ${error} `)
             return { code: 0, msg: "接口请求失败" }
         }
 
@@ -1240,8 +1291,7 @@ class Task {
             return result
 
         } catch (error) {
-            //console.log(error);
-            // $.log(`接口请求失败 `)
+            $.log(`taskRequest接口请求失败结果为: ${error} `)
             return { code: 0, msg: "接口请求失败" }
         }
 
@@ -1280,6 +1330,100 @@ class Task {
         return "00-" + generateTraceId() + "-" + generateSpanId() + "-01"
     };
 
+    async taskRequest_task3(method, url, body = "") {
+
+
+        let headers = {
+            "Host": "app.dewu.com",
+            "Connection": "keep-alive",
+            "SK": this.sk,
+            "x-auth-token": "Bearer " + this.ck,
+            "traceparent": this.generateIds(),
+            "User-Agent": this.ua,
+            "Content-Type": "application/json",
+
+            "Cookie": `duToken=${this.duToken};`,
+            'shumeiId': this.shumeiId,
+            'uuid': this.uuid,
+            'deviceId': this.deviceId
+        }
+        const reqeuestOptions = {
+            url: url,
+            method: method,
+            headers: headers
+
+        }
+        body == "" ? "" : Object.assign(reqeuestOptions, { body: JSON.stringify(body) })
+        //console.log(reqeuestOptions)
+        try {
+            let { body: result } = await $.httpRequest(reqeuestOptions)
+            return result
+        } catch (error) {
+            $.log(`taskRequest_task2接口请求失败结果为: ${error} `)
+            return { code: 0, msg: "接口请求失败" }
+        }
+        //
+
+    }
+
+    async taskRequest_task2(method, url, body = "") {
+
+
+        let headers = {
+            "Host": "app.dewu.com",
+            "Connection": "keep-alive",
+            //"Content-Length": "62",
+            //"ua": "duapp/5.37.0(android;10)",
+            //"Origin": "https://cdn-m.dewu.com",
+            //"appid": "h5",
+            "SK": this.sk,
+            /*"shumeiId": "20240229101108a9d7deaedd9e5e305209da327c58c8fc21a0fe159c45b78d",*/
+            /*"deviceTrait": "MI+8+Lite",*/
+            "x-auth-token": "Bearer " + this.ck,
+            /*"Sec-Fetch-Dest": "empty",
+            "channel": "xiaomi",
+            "duToken": "d41d8cd9|1630362958|1711360875|4bf085e789d085b0",
+            "appVersion": "5.37.0",
+            "emu": "0",*/
+            //"cookieToken": "d41d8cd9|1630362958|1711360875|4bf085e789d085b0",
+            "traceparent": this.generateIds(),
+            /*"dudeliveryid": "79F073E7555D2BD9490AF2270549ADBABDFE24914A4EEF24D4D5C25559243BDD",*/
+            "User-Agent": this.ua,
+            //"duproductid": "0BC86B71CB9BA08726EDD70256925177BDFE24914A4EEF24D4D5C25559243BDD",
+            "Content-Type": "application/json",
+            /*"isRoot": "0",
+            "imei": "",
+            "duid": "0BC86B71CB9BA08726EDD70256925177BDFE24914A4EEF24D4D5C25559243BDD",
+            "platform": "h5",
+            "isProxy": "0",
+            */
+            /*"X-Requested-With": "com.shizhuang.duapp",
+            "Sec-Fetch-Site": "same-site",
+            "Sec-Fetch-Mode": "cors",
+            "Referer": "https://cdn-m.dewu.com/h5-growth/game-task?gameTaskFlag=true&taskId=Nr52k&taskType=50&countdownIcon=%7B%22countdownIcon%22%3A%22https%3A%2F%2Fcdn.poizon.com%2Fnode-common%2F28c7b3d4060e086551dcc84eca7bfbeb.png%22%2C%22hideCountdownIcon%22%3A%22https%3A%2F%2Fcdn.poizon.com%2Fnode-common%2Fa8b472c7622a53454d82745345cefa71.png%22%2C%22coordinate%22%3A%2212%2C600%22%7D&scrollbarColor=%2301C1C2&fontColor=%23FFFFFF&btd=83500&goodsCollect=goodsDetail&popId=0",
+            "Accept-Encoding": "gzip, deflate",
+            "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",*/
+            "Cookie": `duToken=${this.duToken};`
+        }
+        const reqeuestOptions = {
+            url: url,
+            method: method,
+            headers: headers
+
+        }
+        body == "" ? "" : Object.assign(reqeuestOptions, { body: JSON.stringify(body) })
+        //console.log(reqeuestOptions)
+        try {
+            let { body: result } = await $.httpRequest(reqeuestOptions)
+            return result
+        } catch (error) {
+            $.log(`taskRequest_task2接口请求失败结果为: ${error} `)
+            return { code: 0, msg: "接口请求失败" }
+        }
+        //
+
+    }
+
     async taskRequest_task(method, url, body = "") {
 
 
@@ -1308,7 +1452,7 @@ class Task {
             let { body: result } = await $.httpRequest(reqeuestOptions)
             return result
         } catch (error) {
-            // $.log(`接口请求失败 `)
+            $.log(`taskRequest_task接口请求失败结果为: ${error} `)
             return { code: 0, msg: "接口请求失败" }
         }
         //
