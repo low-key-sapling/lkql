@@ -5,7 +5,7 @@
  *有问题联系3288588344
  *频道：https://pd.qq.com/s/672fku8ge
  * vx爷爷不泡茶
- * cron " 10 8,18 * * *" YeYeBuPaoCha.js
+ * cron "1 0 11,18 * * *" YeYeBuPaoCha.js
  * export yybpc= qm-user-token 多账号换行或者#分隔
  */
 // ============================================================================================================
@@ -58,7 +58,7 @@ class run {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) XWEB/9129',
                 },
                 data:{
-                    "activityId": "983701274523176960",
+                    "activityId": "1055146614748680192",
                     "appid": "wx3423ef0c7b7f19af"
                 }
             }
@@ -94,7 +94,7 @@ class run {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) XWEB/9129',
                 },
                 data:{
-                    "activityId": "983701274523176960",
+                    "activityId": "1055146614748680192",
                     "appid": "wx3423ef0c7b7f19af"
                 }
             }
@@ -155,7 +155,7 @@ class run {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) XWEB/9129',
                 },
                 data: {
-                    "activityId":"983701274523176960",
+                    "activityId":"1055146614748680192",
                     "appid": "wx3423ef0c7b7f19af"
                 }
             }
