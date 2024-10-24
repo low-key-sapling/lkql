@@ -667,7 +667,7 @@ def execute_concurrently(tasks):
 kwyy = os.getenv('kwyy')
 if kwyy is None:
     print("未找到环境变量kwyy")
-elif "&" not in kwyy:
+elif "&" not in kwyy and '\n' not in kwyy:
     kwyys = kwyy.split('#')
     appUid = kwyys[0]
     devId = kwyys[1]
@@ -675,7 +675,10 @@ elif "&" not in kwyy:
     phone = kwyys[3]
     task()
 else:
-    kwyys = kwyy.split('&')
+    if "&" in kwyy:
+        kwyys = kwyy.split('&')
+    else:
+        kwyys = kwyy.split('\n')
     for i, kw in enumerate(kwyys):
         print(f'=====第{i+1}个账号=====')
         try:
