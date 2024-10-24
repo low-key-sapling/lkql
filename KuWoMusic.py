@@ -1,4 +1,5 @@
 """
+Follow By: https://github.com/xxwppp/2024/blob/main/%E9%85%B7%E6%88%91%E6%8F%90%E7%8E%B0.py
 变量名kwyy
 抓appuid#devid#q#phone的值用#连接
 q值：搜auto_login 域名http://ar.i.kuwo.cn/US_NEW/kuwo/login_kw
@@ -34,8 +35,9 @@ def login(q):
     username = re.search(r'uname3=([^;]+)', response.headers['Set-Cookie']).group(1)
     loginSid = re.search(r'websid=([^;]+)', response.headers['Set-Cookie']).group(1)
     loginUid = re.search(r'userid=([^;]+)', response.headers['Set-Cookie']).group(1)
+    account = re.search(r'userid=([^;]+)', response.headers['Set-Cookie']).group(1)
+    print(f'账号{username}登录成功 loginSid={loginSid} loginUid={loginUid} account={account}')
     return username, loginSid, loginUid
-
 
 def randomtime():
     random_number = random.randint(15, 25)
@@ -607,9 +609,44 @@ def listentomusic(loginUid, loginSid, appUid):
             description = r_json['data']['description']
             print(f'听音乐>>>{description}')
         randomtime()
+
+def coin(loginUid, loginSid, devId, appUid):
+    headers = {
+        #'User-Agent': "Mozilla/5.0 (Linux; Android 13; MEIZU 20 Build/TKQ1.221114.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/108.0.5359.128 Mobile Safari/537.36/ kuwopage",
+        'Accept': "application/json, text/plain, */*",
+        'Accept-Encoding': "gzip, deflate",
+        'Origin': "https://h5app.kuwo.cn",
+        'X-Requested-With': "cn.kuwo.player",
+        'Sec-Fetch-Site': "same-site",
+        'Sec-Fetch-Mode': "cors",
+        'Sec-Fetch-Dest': "empty",
+        #'Referer': "https://h5app.kuwo.cn/apps/earning-sign/bill.html?random=1714466331159&kwflag=2655868582_1714466296959",
+        'Accept-Language': "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+    }
+    params2 = {
+        'loginUid': loginUid,
+        'loginSid': loginSid,
+        'devId': devId,
+        'appUid': appUid,
+        'apiVer': "3",
+        'source': "kwplayer_ar_10.8.0.1_meizu.apk",
+        'function': "1",
+        'terminal': "1",
+        'version': "10.8.0.1",
+        'scoreInfo': "",
+        # 't': "0.1941318175506508"
+    }
+    url2 = "https://integralapi.kuwo.cn/api/v1/online/sign/v1/earningSignIn/newUserSignList"
+    response = requests.get(url2, params=params2, headers=headers).json()
+    allcoin = response['data']['remainScore']
+    print(f"coin()结果>>>>>{response['data']}")
+    return allcoin
+
 def tx(loginUid, loginSid, appUid, phone):
     if phone is None:
+        print('phone为空')
         return
+    print('正在等待...')
     url = "https://integralapi.kuwo.cn/api/v1/online/sign/v1/getWithdraw"
     params = {
         "quotaId": "30002",
@@ -638,6 +675,12 @@ def tx(loginUid, loginSid, appUid, phone):
         "Accept-Language": "zh-CN,zh;q=0.."
                            "9,en-US;q=0.8,en;q=0.7"
     }
+    #time.sleep(seconds_until_1830)
+    while True:
+        hour = datetime.now().hour
+
+        if hour == 0 or hour == 8 or hour == 12 or hour == 16 or hour == 20:
+            break
 
     response = requests.get(url, params=params, headers=headers).json()
     text = response['data']['text']
