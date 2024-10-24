@@ -2,7 +2,8 @@
 变量名kwyy
 抓appuid#devid#q#phone的值用#连接
 q值：搜auto_login 域名http://ar.i.kuwo.cn/US_NEW/kuwo/login_kw
-定时 15 3 7-23/2 * * *
+cron: 15 3 7-23/2 * * ?
+const $ = new Env("酷我Music");
 """
 
 
